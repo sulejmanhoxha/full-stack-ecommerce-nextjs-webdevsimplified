@@ -19,6 +19,7 @@ If you want to use any other database, learn more about how to write the DATABAS
 
 After that run :
 ```sh
+npm run generate
 npm run migrate
 ```
 

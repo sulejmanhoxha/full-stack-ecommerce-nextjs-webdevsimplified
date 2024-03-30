@@ -36,8 +36,6 @@ export function SignUpForm() {
   async function onSubmit(values: z.infer<typeof SignUpSchema>) {
     const res = await signUp(values);
     if (res.error) {
-      console.log("🚀 ~ onSubmit ~ signupform ~ res.error:", res.error);
-
       toast({
         variant: "destructive",
         description: res.error,
