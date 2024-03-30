@@ -1,0 +1,20 @@
+{
+  "plugins": [
+    "@trivago/prettier-plugin-sort-imports",
+    "prettier-plugin-tailwindcss"
+  ],
+
+  "useTabs": false,
+  "tabWidth": 2,
+  "importOrder": [
+    "^@/zod/(.*)$",
+    "^@/actions/(.*)$",
+    "^@/lib/(.*)$",
+    "^@/components/context/(.*)$",
+    "^@/components/ui/(.*)$",
+    "^@/components/(.*)$",
+    "^[./]"
+  ],
+  "importOrderSeparation": true,
+  "importOrderSortSpecifiers": true
+}
