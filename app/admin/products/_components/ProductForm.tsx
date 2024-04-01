@@ -34,8 +34,6 @@ export function ProductForm() {
     },
   });
 
-  const fileRef = form.register("file", { required: true });
-  const fileRef2 = form.register("image", { required: true });
 
   const [priceInCents, setPriceInCents] = useState<number>(200);
 
@@ -100,49 +98,52 @@ export function ProductForm() {
           )}
         />
 
-        <FormField
+<FormField
           control={form.control}
           name="file"
-          render={({ field }) => (
+          render={({ field: { value, onChange, ...fieldProps } }) => (
             <FormItem>
-              <FormLabel>File</FormLabel>
+              <FormLabel>file</FormLabel>
               <FormControl>
                 <Input
-                  accept="video/*"
+                  {...fieldProps}
+                  placeholder="file"
                   type="file"
-                  placeholder="video for product"
-                  {...fileRef}
+                  accept="video/*"
+                  onChange={(event) =>
+                    onChange(event.target.files && event.target.files[0])
+                  }
                 />
               </FormControl>
               <FormMessage />
             </FormItem>
           )}
         />
-
-        <FormField
+                <FormField
           control={form.control}
           name="image"
-          render={({ field }) => (
+          render={({ field: { value, onChange, ...fieldProps } }) => (
             <FormItem>
-              <FormLabel>Image</FormLabel>
+              <FormLabel>image</FormLabel>
               <FormControl>
                 <Input
-                  accept="image/png, image/jpeg, image/jpg"
+                  {...fieldProps}
+                  placeholder="images"
                   type="file"
-                  placeholder="image for product"
-                  {...fileRef2}
+                  accept=".jpg, .jpeg, .png"
+                  multiple
+                  onChange={(e) =>
+                    onChange([...Array.from(e.target.files ?? [])])
+                  }
                 />
               </FormControl>
               <FormMessage />
             </FormItem>
           )}
         />
-        {/* <SubmitButton isSubmitting={form.formState.isSubmitting} /> */}
-
-        {/* <Button disabled={form.formState.isSubmitting} type="submit">
+        <Button disabled={form.formState.isSubmitting} type="submit">
           {form.formState.isSubmitting ? "Saving..." : "Save"}
-        </Button> */}
-        <Button type="submit">save</Button>
+        </Button>
       </form>
     </Form>
   );

@@ -32,26 +32,20 @@ export const NewProductSchema = z.object({
     message: "The description must be at least 8 characters long",
   }),
 
-  file: z
-    .any()
-    .refine((file) => file?.length == 1, "File is required.")
-    .refine(
-      (file) => file[0]?.type.startsWith("video/"),
-      "Must be a png, jpeg or jpg.",
-    )
-    .refine((file) => file[0]?.size <= 5000000, `Max file size is 5MB.`),
+  file: z.object({
+    name: z.string(),
+    size: z.number(),
+    type: z.string()
+  })
+  .refine((file) => file.size <= 10000000 && ["video/mp4","video/mov"].includes(file.type),"file: Only .mp4, .mov files of 10MB or less are accepted."),
+  image: z.array(
+    z.object({
+      name: z.string(),
+      size: z.number(),
+      type: z.string()
+  }))
+  .refine((files) => files.every((file) => file.size <= 50000000&& ["image/png","image/jpeg","image/jpg"].includes(file.type)),"Item image: Only .jpeg, .jpg, .png files of 5MB or less are accepted.")
 
-  image: z
-    .any()
-    .refine((file) => file?.length == 1, "File is required.")
-    .refine(
-      (file) =>
-        file[0]?.type === "image/png" ||
-        file[0]?.type === "image/jpeg" ||
-        file[0]?.type === "image/jpg",
-      "Must be a png, jpeg or jpg.",
-    )
-    .refine((file) => file[0]?.size <= 5000000, `Max file size is 5MB.`),
 });
 
 // const fileSchema = z.instanceof(File, { message: "Required" });
