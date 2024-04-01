@@ -41,3 +41,8 @@ export const NewProductSchema = z.object({
   file: fileSchema.refine((file) => file.size > 0, "Required."),
   image: imageSchema.refine((file) => file.size > 0, "Required."),
 });
+
+export const UpdateProductSchema = NewProductSchema.extend({
+  file: fileSchema.optional(),
+  image: imageSchema.optional(),
+});

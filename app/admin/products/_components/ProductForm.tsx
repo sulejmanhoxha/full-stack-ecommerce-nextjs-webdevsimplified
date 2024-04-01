@@ -1,156 +1,126 @@
 "use client";
 
-import { addProduct, addProduct2 } from "@/app/admin/_actions/products";
-import { zodResolver } from "@hookform/resolvers/zod";
+import { addProduct, updateProduct } from "@/app/admin/_actions/products";
+import { Product } from "@prisma/client";
+import Image from "next/image";
 import { useState } from "react";
-import { useFormState } from "react-dom";
-import { useForm } from "react-hook-form";
-import { z } from "zod";
-
-import { NewProductSchema } from "@/zod/schemas";
+import { useFormState, useFormStatus } from "react-dom";
 
 import { formatCurrency } from "@/lib/formatters";
 
 import { Button } from "@/components/ui/button";
-import {
-  Form,
-  FormControl,
-  FormDescription,
-  FormField,
-  FormItem,
-  FormLabel,
-  FormMessage,
-} from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 
-export function ProductForm() {
-  const form = useForm<z.infer<typeof NewProductSchema>>({
-    resolver: zodResolver(NewProductSchema),
-    defaultValues: {
-      name: "",
-      description: "",
-      priceInCents: 200,
-      file: undefined,
-      image: undefined,
-    },
-  });
+export function ProductForm({ product }: { product: Product | null }) {
+  const [error, action] = useFormState(
+    product == null ? addProduct : updateProduct.bind(null, product.id),
+    {},
+  );
+  const [priceInCents, setPriceInCents] = useState<number | undefined>(
+    product?.priceInCents,
+  );
 
-  const [priceInCents, setPriceInCents] = useState<number>(200);
-
-  async function onSubmit(values: z.infer<typeof NewProductSchema>) {
-    console.log(values);
-
-    await addProduct(values);
-  }
   return (
-    <Form {...form}>
-      <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-2">
-        <FormField
-          control={form.control}
+    <form action={action} className="space-y-4">
+      <div className="space-y-2">
+        <Label htmlFor="name">Name</Label>
+        <Input
+          type="text"
+          id="name"
           name="name"
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel>Name</FormLabel>
-              <FormControl>
-                <Input placeholder="name" {...field} />
-              </FormControl>
-              <FormMessage />
-            </FormItem>
-          )}
+          required
+          defaultValue={product?.name || ""}
         />
-        <FormField
-          control={form.control}
+        {error.name && <p className="text-destructive">{error.name}</p>}
+      </div>
+
+      <div className="space-y-2">
+        <Label htmlFor="description">Description</Label>
+        <Textarea
+          id="description"
           name="description"
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel>Description</FormLabel>
-              <FormControl>
-                <Textarea placeholder="description" {...field} />
-              </FormControl>
-              <FormMessage />
-            </FormItem>
-          )}
+          required
+          defaultValue={product?.description || ""}
         />
-        <FormField
-          control={form.control}
+        {error.description && (
+          <p className="text-destructive">{error.description}</p>
+        )}
+      </div>
+
+      <div className="space-y-2">
+        <Label htmlFor="priceInCents">Price in cents</Label>
+        <Input
+          type="number"
+          min={200}
+          id="priceInCents"
           name="priceInCents"
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel>Price in cents</FormLabel>
-              <FormControl>
-                <Input
-                  type="number"
-                  min={200}
-                  placeholder="100000"
-                  onChangeCapture={(e) =>
-                    setPriceInCents(Number(e.currentTarget.value))
-                  }
-                  {...field}
-                />
-              </FormControl>
-              <FormDescription>
-                The price in dollars:{" "}
-                {formatCurrency((priceInCents || 0) / 100)}
-              </FormDescription>
-              <FormMessage />
-            </FormItem>
-          )}
+          required
+          onChangeCapture={(e) =>
+            setPriceInCents(Number(e.currentTarget.value))
+          }
+          defaultValue={product?.priceInCents || ""}
         />
+        {error.priceInCents && (
+          <p className="text-destructive">{error.priceInCents}</p>
+        )}
 
-        <FormField
-          control={form.control}
+        <p>
+          {" "}
+          The price in dollars: {formatCurrency((priceInCents || 0) / 100)}
+        </p>
+      </div>
+
+      <div className="space-y-2">
+        <Label htmlFor="file">File</Label>
+        <Input
+          type="file"
+          accept="video/*"
+          multiple={false}
+          id="file"
           name="file"
-          render={({ field: { value, onChange, ...fieldProps } }) => (
-            <FormItem>
-              <FormLabel>File</FormLabel>
-              <FormControl>
-                <Input
-                  {...fieldProps}
-                  placeholder="file"
-                  type="file"
-                  accept="video/*"
-                  onChange={(event) =>
-                    onChange(event.target.files && event.target.files[0])
-                  }
-                />
-              </FormControl>
-              <FormMessage />
-            </FormItem>
-          )}
+          required={product === null}
         />
-        <FormField
-          control={form.control}
-          name="image"
-          render={({ field: { value, onChange, ...fieldProps } }) => (
-            <FormItem>
-              <FormLabel>Image</FormLabel>
-              <FormControl>
-                <Input
-                  {...fieldProps}
-                  placeholder="images"
-                  type="file"
-                  accept=".jpg, .jpeg, .png"
-                  onChange={(event) =>
-                    onChange(event.target.files && event.target.files[0])
-                  }
-                />
-              </FormControl>
-              <FormMessage />
-            </FormItem>
-          )}
-        />
+        {error.file && <p className="text-destructive">{error.file}</p>}
 
-        <SubmitButton isSubmitting={form.formState.isSubmitting} />
-      </form>
-    </Form>
+        {product != null && (
+          <div className="text-muted-foreground">{product.filePath}</div>
+        )}
+      </div>
+
+      <div className="space-y-2">
+        <Label htmlFor="image">image</Label>
+        <Input
+          type="file"
+          accept="image/*"
+          multiple={false}
+          id="image"
+          name="image"
+          required={product === null}
+        />
+        {error.image && <p className="text-destructive">{error.image}</p>}
+
+        {product != null && (
+          <Image
+            src={product.imagePath}
+            alt={`Product image : ${product.name}`}
+            width={400}
+            height={400}
+          />
+        )}
+      </div>
+
+      <SubmitButton />
+    </form>
   );
 }
 
-function SubmitButton({ isSubmitting }: { isSubmitting: boolean }) {
+function SubmitButton() {
+  const { pending } = useFormStatus();
   return (
-    <Button disabled={isSubmitting} type="submit">
-      {isSubmitting ? "Saving..." : "Save"}
+    <Button disabled={pending} type="submit">
+      {pending ? "Saving..." : "Save"}
     </Button>
   );
 }
