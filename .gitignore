@@ -40,3 +40,7 @@ next-env.d.ts
 
 # sqlite database
 dev.db
+
+# media files
+/products
+/public/products
