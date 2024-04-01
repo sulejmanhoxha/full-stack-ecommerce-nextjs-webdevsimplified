@@ -1,8 +1,9 @@
 "use client";
 
-import { addProduct } from "@/app/admin/_actions/products";
+import { addProduct, addProduct2 } from "@/app/admin/_actions/products";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useState } from "react";
+import { useFormState } from "react-dom";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 
@@ -21,6 +22,7 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
+import { Textarea } from "@/components/ui/textarea";
 
 export function ProductForm() {
   const form = useForm<z.infer<typeof NewProductSchema>>({
@@ -34,9 +36,6 @@ export function ProductForm() {
     },
   });
 
-  const fileRef = form.register("file", { required: true });
-  const fileRef2 = form.register("image", { required: true });
-
   const [priceInCents, setPriceInCents] = useState<number>(200);
 
   async function onSubmit(values: z.infer<typeof NewProductSchema>) {
@@ -44,7 +43,6 @@ export function ProductForm() {
 
     await addProduct(values);
   }
-
   return (
     <Form {...form}>
       <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-2">
@@ -68,7 +66,7 @@ export function ProductForm() {
             <FormItem>
               <FormLabel>Description</FormLabel>
               <FormControl>
-                <Input placeholder="description" {...field} />
+                <Textarea placeholder="description" {...field} />
               </FormControl>
               <FormMessage />
             </FormItem>
@@ -103,55 +101,56 @@ export function ProductForm() {
         <FormField
           control={form.control}
           name="file"
-          render={({ field }) => (
+          render={({ field: { value, onChange, ...fieldProps } }) => (
             <FormItem>
               <FormLabel>File</FormLabel>
               <FormControl>
                 <Input
-                  accept="video/*"
+                  {...fieldProps}
+                  placeholder="file"
                   type="file"
-                  placeholder="video for product"
-                  {...fileRef}
+                  accept="video/*"
+                  onChange={(event) =>
+                    onChange(event.target.files && event.target.files[0])
+                  }
                 />
               </FormControl>
               <FormMessage />
             </FormItem>
           )}
         />
-
         <FormField
           control={form.control}
           name="image"
-          render={({ field }) => (
+          render={({ field: { value, onChange, ...fieldProps } }) => (
             <FormItem>
               <FormLabel>Image</FormLabel>
               <FormControl>
                 <Input
-                  accept="image/png, image/jpeg, image/jpg"
+                  {...fieldProps}
+                  placeholder="images"
                   type="file"
-                  placeholder="image for product"
-                  {...fileRef2}
+                  accept=".jpg, .jpeg, .png"
+                  onChange={(event) =>
+                    onChange(event.target.files && event.target.files[0])
+                  }
                 />
               </FormControl>
               <FormMessage />
             </FormItem>
           )}
         />
-        {/* <SubmitButton isSubmitting={form.formState.isSubmitting} /> */}
 
-        {/* <Button disabled={form.formState.isSubmitting} type="submit">
-          {form.formState.isSubmitting ? "Saving..." : "Save"}
-        </Button> */}
-        <Button type="submit">save</Button>
+        <SubmitButton isSubmitting={form.formState.isSubmitting} />
       </form>
     </Form>
   );
 }
 
-// function SubmitButton({ isSubmitting }: { isSubmitting: boolean }) {
-//   return (
-//     <Button disabled={isSubmitting} type="submit">
-//       {isSubmitting ? "Saving..." : "Save"}
-//     </Button>
-//   );
-// }
+function SubmitButton({ isSubmitting }: { isSubmitting: boolean }) {
+  return (
+    <Button disabled={isSubmitting} type="submit">
+      {isSubmitting ? "Saving..." : "Save"}
+    </Button>
+  );
+}

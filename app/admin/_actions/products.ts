@@ -1,18 +1,17 @@
 "use server";
 
 import fs from "fs/promises";
-import { redirect } from "next/navigation";
-import { z } from "zod";
+import { notFound, redirect } from "next/navigation";
 
 import { NewProductSchema } from "@/zod/schemas";
 
 import { prisma } from "@/lib/prismaClient";
 
-export const addProduct = async (values: z.infer<typeof NewProductSchema>) => {
-  console.log("test");
+export async function addProduct(prevState: unknown, values: FormData) {
+  const result = NewProductSchema.safeParse(
+    Object.fromEntries(values.entries()),
+  );
 
-  const result = NewProductSchema.safeParse(values);
-  console.log(result);
   if (result.success === false) {
     return result.error.formErrors.fieldErrors;
   }
@@ -41,4 +40,26 @@ export const addProduct = async (values: z.infer<typeof NewProductSchema>) => {
   });
 
   redirect("/admin/products");
-};
+}
+
+export async function toggleProductAvailability(
+  id: string,
+  isAvailableForPurchase: boolean,
+) {
+  await prisma.product.update({
+    where: { id },
+    data: {
+      isAvailableForPurchase,
+    },
+  });
+}
+
+export async function deleteProduct(id: string) {
+  const product = await prisma.product.delete({
+    where: { id },
+  });
+
+  if (product) {
+    return notFound();
+  }
+}
