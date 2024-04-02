@@ -5,6 +5,8 @@ import { cn } from "@/lib/utils";
 
 import { Toaster } from "@/components/ui/toaster";
 
+import { Nav, NavLink } from "@/components/Nav";
+
 import "./globals.css";
 
 const fontSans = FontSans({
@@ -25,9 +27,17 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body
-        className={cn("bg-background min-h-screen font-sans antialiased", fontSans.variable)}
+        className={cn(
+          "min-h-screen bg-background font-sans antialiased",
+          fontSans.variable,
+        )}
       >
-        {children}
+        <Nav>
+          <NavLink href="/">Home</NavLink>
+          <NavLink href="/products">Products</NavLink>
+          <NavLink href="/orders">My orders</NavLink>
+        </Nav>
+        <div className="container my-6">{children}</div>
         <Toaster />
       </body>
     </html>
