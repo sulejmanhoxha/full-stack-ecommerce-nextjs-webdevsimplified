@@ -13,6 +13,7 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 
+<<<<<<< HEAD
 export function ProductForm({ product }: { product: Product | null }) {
   const [error, action] = useFormState(
     product == null ? addProduct : updateProduct.bind(null, product.id),
@@ -21,6 +22,28 @@ export function ProductForm({ product }: { product: Product | null }) {
   const [priceInCents, setPriceInCents] = useState<number | undefined>(
     product?.priceInCents,
   );
+=======
+export function ProductForm() {
+  const form = useForm<z.infer<typeof NewProductSchema>>({
+    resolver: zodResolver(NewProductSchema),
+    defaultValues: {
+      name: "",
+      description: "",
+      priceInCents: 200,
+      file: undefined,
+      image: undefined,
+    },
+  });
+
+
+  const [priceInCents, setPriceInCents] = useState<number>(200);
+
+  async function onSubmit(values: z.infer<typeof NewProductSchema>) {
+    console.log(values);
+
+    await addProduct(values);
+  }
+>>>>>>> 7e5053c79cbdbb3581770227811fe503c5846b33
 
   return (
     <form action={action} className="space-y-4">
@@ -66,6 +89,7 @@ export function ProductForm({ product }: { product: Product | null }) {
           <p className="text-destructive">{error.priceInCents}</p>
         )}
 
+<<<<<<< HEAD
         <p>
           {" "}
           The price in dollars: {formatCurrency((priceInCents || 0) / 100)}
@@ -113,6 +137,56 @@ export function ProductForm({ product }: { product: Product | null }) {
 
       <SubmitButton />
     </form>
+=======
+<FormField
+          control={form.control}
+          name="file"
+          render={({ field: { value, onChange, ...fieldProps } }) => (
+            <FormItem>
+              <FormLabel>file</FormLabel>
+              <FormControl>
+                <Input
+                  {...fieldProps}
+                  placeholder="file"
+                  type="file"
+                  accept="video/*"
+                  onChange={(event) =>
+                    onChange(event.target.files && event.target.files[0])
+                  }
+                />
+              </FormControl>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
+                <FormField
+          control={form.control}
+          name="image"
+          render={({ field: { value, onChange, ...fieldProps } }) => (
+            <FormItem>
+              <FormLabel>image</FormLabel>
+              <FormControl>
+                <Input
+                  {...fieldProps}
+                  placeholder="images"
+                  type="file"
+                  accept=".jpg, .jpeg, .png"
+                  multiple
+                  onChange={(e) =>
+                    onChange([...Array.from(e.target.files ?? [])])
+                  }
+                />
+              </FormControl>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
+        <Button disabled={form.formState.isSubmitting} type="submit">
+          {form.formState.isSubmitting ? "Saving..." : "Save"}
+        </Button>
+      </form>
+    </Form>
+>>>>>>> 7e5053c79cbdbb3581770227811fe503c5846b33
   );
 }
 
