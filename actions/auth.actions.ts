@@ -24,6 +24,7 @@ export const signUp = async (values: z.infer<typeof SignUpSchema>) => {
     const user = await prisma.user.create({
       data: {
         username: values.username,
+        email: values.email,
         password: hashedPassword,
       },
       select: { id: true, username: true },

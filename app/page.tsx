@@ -3,6 +3,7 @@ import { ArrowRight } from "lucide-react";
 import Link from "next/link";
 import { Suspense } from "react";
 
+import { cache } from "@/lib/cache";
 import { prisma } from "@/lib/prismaClient";
 
 import { Button } from "@/components/ui/button";
@@ -20,30 +21,37 @@ export default function Homepage() {
     </main>
   );
 }
-
-function getMostPopularProducts() {
-  return prisma.product.findMany({
-    where: {
-      isAvailableForPurchase: true,
-    },
-    orderBy: {
-      order: {
-        _count: "desc",
+const getMostPopularProducts = cache(
+  async () => {
+    return await prisma.product.findMany({
+      where: {
+        isAvailableForPurchase: true,
       },
-    },
-    take: 6,
-  });
-}
+      orderBy: {
+        order: {
+          _count: "desc",
+        },
+      },
+      take: 6,
+    });
+  },
+  ["/", "getMostPopularProducts"],
+  { revalidate: 60 * 60 * 24 },
+);
 
-function getNewestProducts() {
-  return prisma.product.findMany({
-    where: {
-      isAvailableForPurchase: true,
-    },
-    orderBy: { createdAt: "desc" },
-    take: 6,
-  });
-}
+const getNewestProducts = cache(
+  async () => {
+    return await prisma.product.findMany({
+      where: {
+        isAvailableForPurchase: true,
+      },
+      orderBy: { createdAt: "desc" },
+      take: 6,
+    });
+  },
+  ["/", "getNewestProducts"],
+  { revalidate: 60 * 60 * 24 },
+);
 
 type ProductGridProps = {
   title: string;

@@ -18,11 +18,11 @@ export const lucia = new Lucia(adapter, {
   // IMPORTANT: IF YOU WANT OTHER ATTRIBUTES OF THE USER
   // TO BE RETURNED BY LUCIA, YOU HAVE TO LIST THEM HERE
 
-  // getUserAttributes: (attributes) => {
-  //   return {
-  //     username: attributes.username,
-  //   };
-  // },
+  getUserAttributes: (attributes) => {
+    return {
+      email: attributes.email,
+    };
+  },
 });
 
 export const validateRequest = cache(async () => {
@@ -67,6 +67,10 @@ declare module "lucia" {
     Lucia: typeof lucia;
 
     // UNCOMMENT THIS ASWELL FOR THE USER ATTIBUTES
-    // DatabaseUserAttributes: Omit<User, "id">;
+    DatabaseUserAttributes: DatabaseUserAttributes;
   }
+}
+
+interface DatabaseUserAttributes {
+  email: string;
 }

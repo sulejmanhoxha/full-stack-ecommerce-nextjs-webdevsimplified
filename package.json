@@ -10,7 +10,9 @@
     "generate": "npx prisma generate",
     "migrate": "npx prisma migrate dev",
     "studio": "npx prisma studio",
-    "format": "npx prettier . --write"
+    "format": "npx prettier . --write",
+    "resend": "cp .env ./node_modules/react-email && email dev --dir ./app/email --port 3001",
+    "stripe": "stripe listen --forward-to localhost:3000/webhooks/stripe"
   },
   "dependencies": {
     "@hookform/resolvers": "^3.3.4",
@@ -20,6 +22,9 @@
     "@radix-ui/react-label": "^2.0.2",
     "@radix-ui/react-slot": "^1.0.2",
     "@radix-ui/react-toast": "^1.1.5",
+    "@react-email/components": "^0.0.16",
+    "@stripe/react-stripe-js": "^2.6.2",
+    "@stripe/stripe-js": "^3.2.0",
     "argon2": "^0.40.1",
     "bcrypt": "^5.1.1",
     "class-variance-authority": "^0.7.0",
@@ -29,7 +34,10 @@
     "next": "14.1.4",
     "react": "^18",
     "react-dom": "^18",
+    "react-email": "^2.1.1",
     "react-hook-form": "^7.51.2",
+    "resend": "^3.2.0",
+    "stripe": "^14.23.0",
     "tailwind-merge": "^2.2.2",
     "tailwindcss-animate": "^1.0.7",
     "zod": "^3.22.4"

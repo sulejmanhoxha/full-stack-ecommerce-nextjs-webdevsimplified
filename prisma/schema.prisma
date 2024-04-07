@@ -15,6 +15,7 @@ model User {
   id       String    @id @default(uuid())
   username String    @unique
   password String
+  email    String    @unique
   sessions Session[]
   orders   Order[]
 }
