@@ -12,12 +12,23 @@ datasource db {
 }
 
 model User {
-  id       String    @id @default(uuid())
-  username String    @unique
-  password String
-  email    String    @unique
-  sessions Session[]
-  orders   Order[]
+  id                    String                  @id @default(uuid())
+  email                 String                  @unique
+  emailVerified         Boolean                 @default(false)
+  password              String
+  role                  String                  @default("user")
+  emailVerificationCode EmailVerificationCode[]
+  sessions              Session[]
+  orders                Order[]
+}
+
+model EmailVerificationCode {
+  id        String   @id @default(uuid())
+  code      String
+  email     String
+  expiresAt DateTime
+  user      User     @relation(fields: [userId], onDelete: Cascade, references: [id])
+  userId    String   @unique
 }
 
 model Session {

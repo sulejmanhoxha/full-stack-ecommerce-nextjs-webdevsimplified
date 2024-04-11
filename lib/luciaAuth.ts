@@ -20,7 +20,10 @@ export const lucia = new Lucia(adapter, {
 
   getUserAttributes: (attributes) => {
     return {
+      id: attributes.id,
+      role: attributes.role,
       email: attributes.email,
+      emailVerified: attributes.emailVerified,
     };
   },
 });
@@ -71,6 +74,5 @@ declare module "lucia" {
   }
 }
 
-interface DatabaseUserAttributes {
-  email: string;
-}
+// we want lucia to return everything when the user loggs in except the password
+interface DatabaseUserAttributes extends Omit<User, "password"> {}
