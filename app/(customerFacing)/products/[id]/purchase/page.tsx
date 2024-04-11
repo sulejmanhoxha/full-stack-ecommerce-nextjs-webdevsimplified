@@ -1,4 +1,4 @@
-import { CheckoutForm } from "@/app/products/[id]/purchase/_components/CheckoutForm";
+import { CheckoutForm } from "@/app/(customerFacing)/products/[id]/purchase/_components/CheckoutForm";
 import { notFound } from "next/navigation";
 import Stripe from "stripe";
 

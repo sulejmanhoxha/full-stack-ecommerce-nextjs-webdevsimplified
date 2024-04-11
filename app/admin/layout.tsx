@@ -1,4 +1,4 @@
-import { redirect } from "next/navigation";
+import { notFound, redirect } from "next/navigation";
 
 import { validateRequest } from "@/lib/luciaAuth";
 
@@ -18,6 +18,10 @@ export default async function AdminLayout({
     return redirect("/signin");
   }
 
+  if (!user.role === "admin") {
+    return notFound();
+  }
+
   return (
     <>
       <Nav>
@@ -26,7 +30,9 @@ export default async function AdminLayout({
         <NavLink href="/admin/users">Customers</NavLink>
         <NavLink href="/admin/orders">Sales</NavLink>
       </Nav>
-      <div className="container my-6">{children}</div>
+      <div className="container my-6 transition-all duration-500">
+        {children}
+      </div>
     </>
   );
 }

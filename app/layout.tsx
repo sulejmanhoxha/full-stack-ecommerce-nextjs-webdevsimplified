@@ -1,16 +1,16 @@
 import type { Metadata } from "next";
-import { Inter } from 'next/font/google'
+import { Inter as FontSans } from "next/font/google";
 
 import { cn } from "@/lib/utils";
 
 import { Toaster } from "@/components/ui/toaster";
 
-import { Nav, NavLink } from "@/components/Nav";
-
 import "./globals.css";
 
-const inter = Inter({ subsets: ['latin'] })
-
+const fontSans = FontSans({
+  subsets: ["latin"],
+  variable: "--font-sans",
+});
 
 export const metadata: Metadata = {
   title: "Create Next App",
@@ -27,17 +27,10 @@ export default function RootLayout({
       <body
         className={cn(
           "min-h-screen bg-background font-sans antialiased",
-          inter.className,
+          fontSans.variable,
         )}
       >
-        <Nav>
-          <NavLink href="/">Home</NavLink>
-          <NavLink href="/products">Products</NavLink>
-          <NavLink href="/orders">My orders</NavLink>
-        </Nav>
-        <div className="container my-6 transition-all duration-500">
-          {children}
-        </div>
+        {children}
         <Toaster />
       </body>
     </html>
