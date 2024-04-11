@@ -19,8 +19,8 @@ If you want to use any other database, learn more about how to write the DATABAS
 
 After that run :
 ```sh
-npm run generate
 npm run migrate
+npm run generate
 ```
 
 If you want to view the database using a GUI, run this command and open [http://localhost:5555](http://localhost:5555) with your browser:
