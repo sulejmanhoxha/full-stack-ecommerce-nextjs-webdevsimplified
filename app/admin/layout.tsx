@@ -1,6 +1,9 @@
+import { signOut } from "@/app/(auth)/_actions/signOut";
 import { notFound, redirect } from "next/navigation";
 
 import { validateRequest } from "@/lib/luciaAuth";
+
+import { Button } from "@/components/ui/button";
 
 import { Nav, NavLink } from "@/components/Nav";
 
@@ -18,7 +21,7 @@ export default async function AdminLayout({
     return redirect("/signin");
   }
 
-  if (!user.role === "admin") {
+  if (!(user.role === "admin")) {
     return notFound();
   }
 
@@ -29,6 +32,12 @@ export default async function AdminLayout({
         <NavLink href="/admin/products">Products</NavLink>
         <NavLink href="/admin/users">Customers</NavLink>
         <NavLink href="/admin/orders">Sales</NavLink>
+
+        <form className="ml-4 self-center" action={signOut}>
+          <Button variant={"destructive"} type="submit">
+            Sign out
+          </Button>
+        </form>
       </Nav>
       <div className="container my-6 transition-all duration-500">
         {children}

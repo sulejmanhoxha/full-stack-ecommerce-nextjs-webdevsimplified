@@ -1,4 +1,8 @@
+import { signOut } from "@/app/(auth)/_actions/signOut";
+
 import { validateRequest } from "@/lib/luciaAuth";
+
+import { Button } from "@/components/ui/button";
 
 import { Nav, NavLink } from "@/components/Nav";
 
@@ -25,6 +29,11 @@ export default async function Layout({
         {user && (
           <>
             <NavLink href="/profile">Profile</NavLink>
+            <form className="ml-4 self-center" action={signOut}>
+              <Button variant={"destructive"} type="submit">
+                Sign out
+              </Button>
+            </form>
           </>
         )}
       </Nav>
