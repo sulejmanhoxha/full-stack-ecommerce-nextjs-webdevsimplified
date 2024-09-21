@@ -3,7 +3,6 @@ import { NextRequest, NextResponse } from "next/server";
 import { Resend } from "resend";
 import Stripe from "stripe";
 
-import { validateRequest } from "@/lib/luciaAuth";
 import { prisma } from "@/lib/prismaClient";
 
 const stripe = new Stripe(process.env.STRIPE_SECRET_KEY as string);
@@ -16,17 +15,25 @@ export async function POST(req: NextRequest) {
     process.env.STRIPE_WEBHOOK_SECRET as string,
   );
 
-  const { user } = await validateRequest();
+  // const { user } = await validateRequest();
 
   if (event.type === "charge.succeeded") {
     const charge = event.data.object;
     const productId = charge.metadata.productId;
+    const userId = charge.metadata.userId;
+    const user = await prisma.user.findUnique({
+      where: {
+        id: userId,
+      },
+    });
+
     // const email = charge.billing_details.email;
     const pricePaidInCents = charge.amount;
 
     const product = await prisma.product.findUnique({
       where: { id: productId },
     });
+
     if (product == null || user == null) {
       return new NextResponse("Bad Request", { status: 400 });
     }
