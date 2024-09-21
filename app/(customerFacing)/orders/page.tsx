@@ -1,5 +1,5 @@
+import { Link } from "next-view-transitions";
 import Image from "next/image";
-import { Link } from 'next-view-transitions'
 import { redirect } from "next/navigation";
 
 import { formatCurrency, formatDate } from "@/lib/formatters";
@@ -38,6 +38,8 @@ export default async function OrdersPage() {
     },
   });
 
+  console.log("userOrders", userOrders);
+
   return (
     <main>
       <h1 className="text-4xl font-semibold">Orders</h1>
@@ -58,7 +60,9 @@ export default async function OrdersPage() {
             {userOrders.map((order) => (
               <TableRow key={order.id}>
                 <TableCell>{order.product.name}</TableCell>
-                <TableCell>{formatCurrency(order.pricePaidInCents)}</TableCell>
+                <TableCell>
+                  {formatCurrency(order.pricePaidInCents / 100)}
+                </TableCell>
                 <TableCell>{formatDate(order.createdAt)}</TableCell>
                 <TableCell>
                   <Button asChild>
