@@ -71,8 +71,8 @@ function PaymentForm({
     e.preventDefault();
 
     // if (stripe == null || elements == null || email == null) return;
-    if (stripe == null || elements == null) return;
-    if (stripe == null || elements == null) return;
+    if (stripe == null || elements == null || user == null) return;
+    // if (user.emailVerified == false) return;
 
     setIsLoading(true);
 
