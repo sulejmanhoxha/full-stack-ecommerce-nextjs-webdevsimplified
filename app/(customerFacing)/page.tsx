@@ -1,6 +1,6 @@
 import { Product } from "@prisma/client";
 import { ArrowRight } from "lucide-react";
-import { Link } from 'next-view-transitions'
+import { Link } from "next-view-transitions";
 import { Suspense } from "react";
 
 import { cache } from "@/lib/cache";
