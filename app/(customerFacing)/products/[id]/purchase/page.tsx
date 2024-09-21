@@ -1,8 +1,8 @@
 import { SignInForm } from "@/app/(auth)/signin/_components/SignInForm";
 import { CheckoutForm } from "@/app/(customerFacing)/products/[id]/purchase/_components/CheckoutForm";
+import { Link } from "next-view-transitions";
 import Image from "next/image";
-import { Link } from 'next-view-transitions'
-import { notFound } from "next/navigation";
+import { notFound, redirect } from "next/navigation";
 import Stripe from "stripe";
 
 import { formatCurrency } from "@/lib/formatters";
@@ -30,10 +30,14 @@ export default async function PurchasePage({
 
   const { user } = await validateRequest();
 
+  if (!user) {
+    return redirect("/signin");
+  }
+
   const paymentIntent = await stripe.paymentIntents.create({
     amount: product.priceInCents,
     currency: "USD",
-    metadata: { productId: product.id },
+    metadata: { productId: product.id, userId: user.id },
   });
 
   if (paymentIntent.client_secret == null) {
@@ -64,17 +68,11 @@ export default async function PurchasePage({
           </div>
         </div>
 
-        {user ? (
-          <CheckoutForm
-            user={user}
-            product={product}
-            clientSecret={paymentIntent.client_secret}
-          />
-        ) : (
-          <Button asChild>
-            <Link href={"/signin"}>Sign in to purchase</Link>
-          </Button>
-        )}
+        <CheckoutForm
+          user={user}
+          product={product}
+          clientSecret={paymentIntent.client_secret}
+        />
       </div>
     </>
   );
