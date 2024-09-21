@@ -1,5 +1,5 @@
+import { Link } from "next-view-transitions";
 import Image from "next/image";
-import { Link } from 'next-view-transitions'
 import { notFound } from "next/navigation";
 import Stripe from "stripe";
 
@@ -8,7 +8,7 @@ import { prisma } from "@/lib/prismaClient";
 
 import { Button } from "@/components/ui/button";
 
-const stripe = new Stripe(process.env.NEXT_PUBLIC_STRIPE_PUBLIC_KEY as string);
+const stripe = new Stripe(process.env.STRIPE_SECRET_KEY as string);
 
 export default async function SuccessPage({
   searchParams,
@@ -19,10 +19,10 @@ export default async function SuccessPage({
     searchParams.payment_intent,
   );
 
-  if (paymentIntent.metadata.product_id == null) return notFound();
+  if (paymentIntent.metadata.productId == null) return notFound();
 
   const product = await prisma.product.findUnique({
-    where: { id: paymentIntent.metadata.product_id },
+    where: { id: paymentIntent.metadata.productId },
   });
 
   if (product == null) return notFound();
@@ -55,7 +55,9 @@ export default async function SuccessPage({
         <Button className="mt-4" size={"lg"} asChild>
           {isSuccess ? (
             <a
-              href={`/product/download/${createDownloadVerification(product.id)}`}
+              href={`/products/download/${await createDownloadVerification(
+                product.id,
+              )}`}
             >
               Download
             </a>
