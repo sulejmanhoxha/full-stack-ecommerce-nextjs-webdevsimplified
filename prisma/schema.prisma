@@ -7,7 +7,7 @@ generator client {
 
 // you can only have one datasource block in your schema
 datasource db {
-  provider = "sqlite"
+  provider = "postgresql"
   url      = env("DATABASE_URL")
 }
 
@@ -50,6 +50,7 @@ model Product {
   updatedAt              DateTime               @updatedAt
   order                  Order[]
   downloadVerification   DownloadVerification[]
+  discountCodes          DiscountCode[]
 }
 
 model Order {
@@ -58,10 +59,12 @@ model Order {
   createdAt        DateTime @default(now())
   updatedAt        DateTime @updatedAt
 
-  userId    String
-  productId String
-  user      User    @relation(fields: [userId], references: [id], onDelete: Cascade)
-  product   Product @relation(fields: [productId], references: [id], onDelete: Restrict)
+  userId         String
+  productId      String
+  user           User         @relation(fields: [userId], references: [id], onDelete: Cascade)
+  product        Product      @relation(fields: [productId], references: [id], onDelete: Restrict)
+  discountCodeId String
+  discountCode   DiscountCode @relation(fields: [discountCodeId], references: [id], onDelete: Restrict)
 }
 
 model DownloadVerification {
@@ -70,4 +73,24 @@ model DownloadVerification {
   createdAt DateTime @default(now())
   productId String
   product   Product  @relation(fields: [productId], references: [id], onDelete: Cascade)
+}
+
+model DiscountCode {
+  id             String           @id @default(uuid())
+  code           String           @unique
+  discountAmount Int
+  discountType   DiscountCodeType
+  expiresAt      DateTime
+  uses           Int              @default(0)
+  isActive       Boolean          @default(true)
+  allProducts    Boolean          @default(false)
+  createdAt      DateTime         @default(now())
+
+  products Product[]
+  orders   Order[]
+}
+
+enum DiscountCodeType {
+  PERCENTAGE
+  FIXED
 }
