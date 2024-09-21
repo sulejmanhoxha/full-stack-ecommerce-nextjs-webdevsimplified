@@ -1,6 +1,6 @@
 import { Description } from "@radix-ui/react-toast";
 import Image from "next/image";
-import Link from "next/link";
+import { Link } from 'next-view-transitions'
 
 import { formatCurrency } from "@/lib/formatters";
 

@@ -4,7 +4,7 @@ import {
   DeleteDropdownItem,
 } from "@/app/admin/products/_components/ProductActions";
 import { CheckCircle2, MoreVertical, XCircle } from "lucide-react";
-import Link from "next/link";
+import { Link } from 'next-view-transitions'
 
 import { formatCurrency, formatNumber } from "@/lib/formatters";
 import { prisma } from "@/lib/prismaClient";

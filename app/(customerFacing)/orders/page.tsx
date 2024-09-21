@@ -1,5 +1,5 @@
 import Image from "next/image";
-import Link from "next/link";
+import { Link } from 'next-view-transitions'
 import { redirect } from "next/navigation";
 
 import { formatCurrency, formatDate } from "@/lib/formatters";
@@ -37,8 +37,6 @@ export default async function OrdersPage() {
       pricePaidInCents: true,
     },
   });
-
-  console.log(userOrders);
 
   return (
     <main>

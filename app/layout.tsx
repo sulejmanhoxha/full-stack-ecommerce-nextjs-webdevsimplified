@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import { Inter as FontSans } from "next/font/google";
+import { ViewTransitions } from 'next-view-transitions'
 
 import { cn } from "@/lib/utils";
 
@@ -23,6 +24,7 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
+    <ViewTransitions>
     <html lang="en">
       <body
         className={cn(
@@ -34,5 +36,6 @@ export default function RootLayout({
         <Toaster />
       </body>
     </html>
+    </ViewTransitions>
   );
 }

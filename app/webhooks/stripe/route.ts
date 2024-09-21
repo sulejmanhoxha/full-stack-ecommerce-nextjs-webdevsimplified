@@ -1,8 +1,9 @@
+import PurchaseReceiptEmail from "@/app/email/PurchaseReceipt";
 import { NextRequest, NextResponse } from "next/server";
 import { Resend } from "resend";
 import Stripe from "stripe";
 
-// import PurchaseReceiptEmail from "@/email/PurchaseReceipt"
+import { validateRequest } from "@/lib/luciaAuth";
 import { prisma } from "@/lib/prismaClient";
 
 const stripe = new Stripe(process.env.STRIPE_SECRET_KEY as string);
@@ -15,16 +16,18 @@ export async function POST(req: NextRequest) {
     process.env.STRIPE_WEBHOOK_SECRET as string,
   );
 
+  const { user } = await validateRequest();
+
   if (event.type === "charge.succeeded") {
     const charge = event.data.object;
     const productId = charge.metadata.productId;
-    const email = charge.billing_details.email;
+    // const email = charge.billing_details.email;
     const pricePaidInCents = charge.amount;
 
     const product = await prisma.product.findUnique({
       where: { id: productId },
     });
-    if (product == null || email == null) {
+    if (product == null || user == null) {
       return new NextResponse("Bad Request", { status: 400 });
     }
 
@@ -42,6 +45,14 @@ export async function POST(req: NextRequest) {
     //   select: { orders: { orderBy: { createdAt: "desc" }, take: 1 } },
     // });
 
+    const order = await prisma.order.create({
+      data: {
+        userId: user.id,
+        productId,
+        pricePaidInCents,
+      },
+    });
+
     const downloadVerification = await prisma.downloadVerification.create({
       data: {
         productId,
@@ -49,16 +60,15 @@ export async function POST(req: NextRequest) {
       },
     });
 
-    // <PurchaseReceiptEmail
-    //   order={order}
-    //   product={product}
-    //   downloadVerificationId={downloadVerification.id}
-    // />
     await resend.emails.send({
       from: `Support <${process.env.SENDER_EMAIL}>`,
-      to: email,
+      to: user.email,
       subject: "Order Confirmation",
-      react: "hi",
+      react: PurchaseReceiptEmail({
+        order,
+        product,
+        downloadVerificationId: downloadVerification.id,
+      }),
     });
   }
 
