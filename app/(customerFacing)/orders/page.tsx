@@ -38,8 +38,6 @@ export default async function OrdersPage() {
     },
   });
 
-  console.log("userOrders", userOrders);
-
   return (
     <main>
       <h1 className="text-4xl font-semibold">Orders</h1>
