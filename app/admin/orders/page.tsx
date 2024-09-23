@@ -1,6 +1,6 @@
 import { PageHeader } from "@/app/admin/_components/PageHeader";
 import { DeleteOrderDropdownItem } from "@/app/admin/orders/_components/OrderActions";
-import { MoreVertical } from "lucide-react";
+import { Minus, MoreVertical } from "lucide-react";
 
 import { formatCurrency } from "@/lib/formatters";
 import { prisma } from "@/lib/prismaClient";
@@ -34,21 +34,11 @@ async function OrdersTable() {
     select: {
       id: true,
       pricePaidInCents: true,
-      product: {
-        select: {
-          name: true,
-        },
-      },
-      user: {
-        select: {
-          email: true,
-        },
-      },
+      product: { select: { name: true } },
+      user: { select: { email: true } },
+      discountCode: { select: { code: true } },
     },
-
-    orderBy: {
-      createdAt: "desc",
-    },
+    orderBy: { createdAt: "desc" },
   });
 
   if (orders.length === 0) return <p>No orders found</p>;
@@ -60,7 +50,7 @@ async function OrdersTable() {
           <TableHead>Products</TableHead>
           <TableHead>Customer</TableHead>
           <TableHead>Price Paid</TableHead>
-
+          <TableHead>Coupon</TableHead>
           <TableHead className="w-0">
             <span className="sr-only ">Actions</span>
           </TableHead>
@@ -75,6 +65,13 @@ async function OrdersTable() {
             <TableCell>{order.user.email}</TableCell>
             <TableCell>
               {formatCurrency(order.pricePaidInCents / 100)}
+            </TableCell>
+            <TableCell>
+              {order.discountCode === null ? (
+                <Minus />
+              ) : (
+                order.discountCode.code
+              )}
             </TableCell>
 
             <TableCell className="text-center">

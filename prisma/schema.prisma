@@ -80,11 +80,12 @@ model DiscountCode {
   code           String           @unique
   discountAmount Int
   discountType   DiscountCodeType
-  expiresAt      DateTime
   uses           Int              @default(0)
   isActive       Boolean          @default(true)
   allProducts    Boolean          @default(false)
   createdAt      DateTime         @default(now())
+  limit          Int?
+  expiresAt      DateTime?
 
   products Product[]
   orders   Order[]
