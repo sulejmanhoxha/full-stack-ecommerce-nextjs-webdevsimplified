@@ -1,7 +1,7 @@
 "use client";
 
 import { userOrderExists } from "@/app/actions/orders";
-import { Product } from "@prisma/client";
+import { DiscountCodeType, Product } from "@prisma/client";
 import {
   Elements,
   LinkAuthenticationElement,
@@ -12,9 +12,11 @@ import {
 import { loadStripe } from "@stripe/stripe-js";
 import { User } from "lucia";
 import Image from "next/image";
-import { FormEvent, useState } from "react";
+import { usePathname, useRouter, useSearchParams } from "next/navigation";
+import { FormEvent, useRef, useState } from "react";
 
-import { formatCurrency } from "@/lib/formatters";
+import { getDiscountedAmount } from "@/lib/discountCodeHelper";
+import { formatCurrency, formatDiscountCode } from "@/lib/formatters";
 
 import { Button } from "@/components/ui/button";
 import {
@@ -25,11 +27,18 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
 
 type CheckoutFormProps = {
   user: User;
   product: Product;
   clientSecret: string;
+  discountCode?: {
+    id: string;
+    discountAmount: number;
+    discountType: DiscountCodeType;
+  };
 };
 
 const stripePromise = loadStripe(
@@ -40,6 +49,7 @@ export function CheckoutForm({
   user,
   product,
   clientSecret,
+  discountCode,
 }: CheckoutFormProps) {
   return (
     <Elements options={{ clientSecret }} stripe={stripePromise}>
@@ -47,6 +57,7 @@ export function CheckoutForm({
         user={user}
         priceInCents={product.priceInCents}
         productId={product.id}
+        discountCode={discountCode}
       />
     </Elements>
   );
@@ -56,16 +67,28 @@ function PaymentForm({
   user,
   priceInCents,
   productId,
+  discountCode,
 }: {
   user: User;
   priceInCents: number;
   productId: string;
+  discountCode?: {
+    id: string;
+    discountAmount: number;
+    discountType: DiscountCodeType;
+  };
 }) {
   const stripe = useStripe();
   const elements = useElements();
   const [isLoading, setIsLoading] = useState(false);
   const [errorMessage, setErrorMessage] = useState<string>();
   // const [email, setEmail] = useState<string>("");
+
+  const discountCodeRef = useRef<HTMLInputElement>(null);
+  const searchParams = useSearchParams();
+  const pathname = usePathname();
+  const router = useRouter();
+  const coupon = searchParams.get("coupon");
 
   async function handleSubmit(e: FormEvent) {
     e.preventDefault();
@@ -107,11 +130,13 @@ function PaymentForm({
       <Card>
         <CardHeader>
           <CardTitle>Checkout</CardTitle>
-          {errorMessage && (
-            <CardDescription className="text-destructive">
-              {errorMessage}
-            </CardDescription>
-          )}
+          <CardDescription className="text-destructive">
+            {errorMessage && <div>{errorMessage}</div>}
+
+            {coupon != null && discountCode == null && (
+              <div>Invalid discount code</div>
+            )}
+          </CardDescription>
         </CardHeader>
 
         <CardContent>
@@ -122,6 +147,38 @@ function PaymentForm({
               onChange={(e) => setEmail(e.value.email)}
             />
           </div> */}
+
+          <div className="mt-4 space-y-2">
+            <Label htmlFor="discountCode">Coupon</Label>
+            <div className="flex items-center gap-4">
+              <Input
+                type="text"
+                id="discountCode"
+                name="discountCode"
+                className="w-full max-w-xs "
+                defaultValue={coupon || ""}
+                ref={discountCodeRef}
+              />
+              <Button
+                type="button"
+                onClick={() => {
+                  const params = new URLSearchParams(searchParams);
+                  params.set("coupon", discountCodeRef.current?.value || "");
+                  router.push(`${pathname}?${params.toString()}`);
+                }}
+              >
+                Apply
+              </Button>
+
+              {discountCode ? (
+                <div className="text-muted-foreground">
+                  {formatDiscountCode(discountCode)} discount
+                </div>
+              ) : (
+                ""
+              )}
+            </div>
+          </div>
         </CardContent>
         <CardFooter>
           <Button

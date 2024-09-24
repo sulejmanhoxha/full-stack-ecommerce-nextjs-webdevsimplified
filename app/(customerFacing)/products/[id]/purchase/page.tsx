@@ -5,6 +5,10 @@ import Image from "next/image";
 import { notFound, redirect } from "next/navigation";
 import Stripe from "stripe";
 
+import {
+  getDiscountedAmount,
+  usableDiscountCodeWhere,
+} from "@/lib/discountCodeHelper";
 import { formatCurrency } from "@/lib/formatters";
 import { validateRequest } from "@/lib/luciaAuth";
 import { prisma } from "@/lib/prismaClient";
@@ -15,8 +19,10 @@ const stripe = new Stripe(process.env.STRIPE_SECRET_KEY as string);
 
 export default async function PurchasePage({
   params: { id },
+  searchParams: { coupon },
 }: {
   params: { id: string };
+  searchParams: { coupon: string };
 }) {
   const product = await prisma.product.findUnique({
     where: {
@@ -28,6 +34,14 @@ export default async function PurchasePage({
     return notFound();
   }
 
+  const discountCode =
+    coupon === null ? undefined : await getDiscountCode(coupon, product.id);
+
+  const amount =
+    discountCode == null
+      ? product.priceInCents
+      : getDiscountedAmount(discountCode, product.priceInCents);
+  const isDiscounted = amount !== product.priceInCents;
   const { user } = await validateRequest();
 
   if (!user) {
@@ -58,8 +72,18 @@ export default async function PurchasePage({
             />
           </div>
           <div className="space-y-2">
-            <div className="text-lg">
-              {formatCurrency(product.priceInCents / 100)}
+            <div className="flex items-baseline gap-4 text-lg">
+              <div
+                className={
+                  isDiscounted
+                    ? "text-sm text-muted-foreground line-through"
+                    : ""
+                }
+              >
+                {" "}
+                {formatCurrency(product.priceInCents / 100)}
+              </div>
+              {isDiscounted ? <div>{formatCurrency(amount / 100)}</div> : ""}
             </div>
             <h1 className="text-2xl font-bold"> {product.name}</h1>
             <div className="line-clamp-3 text-muted-foreground">
@@ -72,8 +96,16 @@ export default async function PurchasePage({
           user={user}
           product={product}
           clientSecret={paymentIntent.client_secret}
+          discountCode={discountCode || undefined}
         />
       </div>
     </>
   );
+}
+
+function getDiscountCode(coupon: string, productId: string) {
+  return prisma.discountCode.findUnique({
+    select: { id: true, discountAmount: true, discountType: true },
+    where: { ...usableDiscountCodeWhere, code: coupon },
+  });
 }
