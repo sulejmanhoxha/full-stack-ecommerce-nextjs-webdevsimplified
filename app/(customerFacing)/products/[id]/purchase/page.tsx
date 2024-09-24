@@ -34,8 +34,9 @@ export default async function PurchasePage({
     return notFound();
   }
 
-  const discountCode =
-    coupon === null ? undefined : await getDiscountCode(coupon, product.id);
+  const discountCode = coupon
+    ? await getDiscountCode(coupon, product.id)
+    : undefined;
 
   const amount =
     discountCode == null
