@@ -71,5 +71,6 @@ function getDiscountCode(coupon: string, productId: string) {
   return prisma.discountCode.findUnique({
     select: { id: true, discountAmount: true, discountType: true },
     where: { ...usableDiscountCodeWhere(productId), code: coupon },
+    where: { ...usableDiscountCodeWhere(productId), code: coupon },
   });
 }
