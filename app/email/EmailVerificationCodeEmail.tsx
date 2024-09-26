@@ -1,22 +1,11 @@
-import {
-  Body,
-  Container,
-  Head,
-  Heading,
-  Html,
-  Preview,
-  Section,
-  Text,
-} from "@react-email/components";
+import { Body, Container, Head, Heading, Html, Preview, Section, Text } from "@react-email/components";
 import * as React from "react";
 
 interface EmailVerificationCodeEmailProps {
   validationCode?: string;
 }
 
-export const EmailVerificationCodeEmail = ({
-  validationCode,
-}: EmailVerificationCodeEmailProps) => (
+export const EmailVerificationCodeEmail = ({ validationCode }: EmailVerificationCodeEmailProps) => (
   <Html>
     <Head />
     <Preview>Confirm your email address</Preview>
@@ -30,8 +19,7 @@ export const EmailVerificationCodeEmail = ({
         </Section>
 
         <Text style={text}>
-          If you didn&apos;t request this email, there&apos;s nothing to worry
-          about, you can safely ignore it.
+          If you didn&apos;t request this email, there&apos;s nothing to worry about, you can safely ignore it.
         </Text>
       </Container>
     </Body>

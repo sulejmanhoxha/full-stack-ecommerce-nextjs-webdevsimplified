@@ -42,15 +42,9 @@ const getProducts = cache(
   { revalidate: 60 * 60 * 24 },
 );
 
-async function ProductSuspense({
-  productFetcher,
-}: {
-  productFetcher: () => Promise<Product[]>;
-}) {
+async function ProductSuspense({ productFetcher }: { productFetcher: () => Promise<Product[]> }) {
   const products = await productFetcher();
   if (products.length === 0) return <p>No products found</p>;
 
-  return products.map((product) => (
-    <ProductCard key={product.id} {...product} />
-  ));
+  return products.map((product) => <ProductCard key={product.id} {...product} />);
 }

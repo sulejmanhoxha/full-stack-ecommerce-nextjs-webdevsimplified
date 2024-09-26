@@ -40,9 +40,7 @@ export default async function AdminLayout({
           </Button>
         </form>
       </Nav>
-      <div className="container my-6 transition-all duration-500">
-        {children}
-      </div>
+      <div className="container my-6 transition-all duration-500">{children}</div>
     </>
   );
 }

@@ -12,14 +12,7 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import {
-  Table,
-  TableBody,
-  TableCell,
-  TableHead,
-  TableHeader,
-  TableRow,
-} from "@/components/ui/table";
+import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 
 export default function UsersPage() {
   return (
@@ -70,12 +63,7 @@ async function UsersTable() {
             <TableCell>{user.email}</TableCell>
 
             <TableCell>{formatNumber(user.orders.length)}</TableCell>
-            <TableCell>
-              {formatCurrency(
-                user.orders.reduce((sum, o) => o.pricePaidInCents + sum, 0) /
-                  100,
-              )}
-            </TableCell>
+            <TableCell>{formatCurrency(user.orders.reduce((sum, o) => o.pricePaidInCents + sum, 0) / 100)}</TableCell>
 
             <TableCell className="text-center">
               <DropdownMenu>

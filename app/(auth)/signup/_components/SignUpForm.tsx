@@ -3,20 +3,13 @@
 import { signUp } from "@/app/(auth)/_actions/signup.action";
 import { SignUpSchema } from "@/app/(auth)/_schemas/zod.schemas";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { Link } from 'next-view-transitions'
+import { Link } from "next-view-transitions";
 import { useRouter } from "next/navigation";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 
 import { Button } from "@/components/ui/button";
-import {
-  Form,
-  FormControl,
-  FormField,
-  FormItem,
-  FormLabel,
-  FormMessage,
-} from "@/components/ui/form";
+import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { toast } from "@/components/ui/use-toast";
 
@@ -58,11 +51,7 @@ export function SignUpForm() {
             <FormItem>
               <FormLabel>Email</FormLabel>
               <FormControl>
-                <Input
-                  type="email"
-                  placeholder="email@example.com"
-                  {...field}
-                />
+                <Input type="email" placeholder="email@example.com" {...field} />
               </FormControl>
               <FormMessage />
             </FormItem>
@@ -75,11 +64,7 @@ export function SignUpForm() {
             <FormItem>
               <FormLabel>Password</FormLabel>
               <FormControl>
-                <Input
-                  placeholder="&#9679;&#9679;&#9679;&#9679;&#9679;"
-                  type="password"
-                  {...field}
-                />
+                <Input placeholder="&#9679;&#9679;&#9679;&#9679;&#9679;" type="password" {...field} />
               </FormControl>
               <FormMessage />
             </FormItem>
@@ -92,11 +77,7 @@ export function SignUpForm() {
             <FormItem>
               <FormLabel>Confirm password</FormLabel>
               <FormControl>
-                <Input
-                  placeholder="&#9679;&#9679;&#9679;&#9679;&#9679;"
-                  type="password"
-                  {...field}
-                />
+                <Input placeholder="&#9679;&#9679;&#9679;&#9679;&#9679;" type="password" {...field} />
               </FormControl>
               <FormMessage />
             </FormItem>

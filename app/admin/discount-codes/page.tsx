@@ -1,19 +1,8 @@
 import { Prisma } from "@prisma/client";
-import {
-  Infinity,
-  CheckCircle2,
-  Globe,
-  Minus,
-  MoreVertical,
-  XCircle,
-} from "lucide-react";
+import { Infinity, CheckCircle2, Globe, Minus, MoreVertical, XCircle } from "lucide-react";
 import Link from "next/link";
 
-import {
-  formatDateTime,
-  formatDiscountCode,
-  formatNumber,
-} from "@/lib/formatters";
+import { formatDateTime, formatDiscountCode, formatNumber } from "@/lib/formatters";
 import { prisma } from "@/lib/prismaClient";
 
 import { Button } from "@/components/ui/button";
@@ -23,26 +12,13 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import {
-  Table,
-  TableBody,
-  TableCell,
-  TableHead,
-  TableHeader,
-  TableRow,
-} from "@/components/ui/table";
+import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 
 import { PageHeader } from "../_components/PageHeader";
-import {
-  ActiveToggleDropdownItem,
-  DeleteDropdownItem,
-} from "./_components/DiscountCodeActions";
+import { ActiveToggleDropdownItem, DeleteDropdownItem } from "./_components/DiscountCodeActions";
 
 const WHERE_EXPIRED: Prisma.DiscountCodeWhereInput = {
-  OR: [
-    { limit: { not: null, lte: prisma.discountCode.fields.uses } },
-    { expiresAt: { not: null, lte: new Date() } },
-  ],
+  OR: [{ limit: { not: null, lte: prisma.discountCode.fields.uses } }, { expiresAt: { not: null, lte: new Date() } }],
 };
 
 const SELECT_FIELDS: Prisma.DiscountCodeSelect = {
@@ -89,10 +65,7 @@ export default async function DiscountCodesPage() {
           <Link href="/admin/discount-codes/new">Add Coupon</Link>
         </Button>
       </div>
-      <DiscountCodesTable
-        discountCodes={unexpiredDiscountCodes}
-        canDeactivate
-      />
+      <DiscountCodesTable discountCodes={unexpiredDiscountCodes} canDeactivate />
 
       <div className="mt-8">
         <h2 className="text-xl font-bold">Expired Coupons</h2>
@@ -108,11 +81,7 @@ type DiscountCodesTableProps = {
   canDeactivate?: boolean;
 };
 
-function DiscountCodesTable({
-  discountCodes,
-  isInactive = false,
-  canDeactivate = false,
-}: DiscountCodesTableProps) {
+function DiscountCodesTable({ discountCodes, isInactive = false, canDeactivate = false }: DiscountCodesTableProps) {
   return (
     <Table>
       <TableHeader>
@@ -149,27 +118,13 @@ function DiscountCodesTable({
             </TableCell>
             <TableCell>{discountCode.code}</TableCell>
             <TableCell>{formatDiscountCode(discountCode)}</TableCell>
+            <TableCell>{discountCode.expiresAt == null ? <Minus /> : formatDateTime(discountCode.expiresAt)}</TableCell>
             <TableCell>
-              {discountCode.expiresAt == null ? (
-                <Minus />
-              ) : (
-                formatDateTime(discountCode.expiresAt)
-              )}
-            </TableCell>
-            <TableCell>
-              {discountCode.limit == null ? (
-                <Infinity />
-              ) : (
-                formatNumber(discountCode.limit - discountCode.uses)
-              )}
+              {discountCode.limit == null ? <Infinity /> : formatNumber(discountCode.limit - discountCode.uses)}
             </TableCell>
             <TableCell>{formatNumber(discountCode._count.orders)}</TableCell>
             <TableCell>
-              {discountCode.allProducts ? (
-                <Globe />
-              ) : (
-                discountCode.products.map((p) => p.name).join(", ")
-              )}
+              {discountCode.allProducts ? <Globe /> : discountCode.products.map((p) => p.name).join(", ")}
             </TableCell>
             <TableCell>
               <DropdownMenu>
@@ -180,17 +135,11 @@ function DiscountCodesTable({
                 <DropdownMenuContent>
                   {canDeactivate && (
                     <>
-                      <ActiveToggleDropdownItem
-                        id={discountCode.id}
-                        isActive={discountCode.isActive}
-                      />
+                      <ActiveToggleDropdownItem id={discountCode.id} isActive={discountCode.isActive} />
                       <DropdownMenuSeparator />
                     </>
                   )}
-                  <DeleteDropdownItem
-                    id={discountCode.id}
-                    disabled={discountCode._count.orders > 0}
-                  />
+                  <DeleteDropdownItem id={discountCode.id} disabled={discountCode._count.orders > 0} />
                 </DropdownMenuContent>
               </DropdownMenu>
             </TableCell>

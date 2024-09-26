@@ -11,14 +11,7 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import {
-  Table,
-  TableBody,
-  TableCell,
-  TableHead,
-  TableHeader,
-  TableRow,
-} from "@/components/ui/table";
+import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 
 export default function OrdersPage() {
   return (
@@ -63,16 +56,8 @@ async function OrdersTable() {
             <TableCell>{order.product.name}</TableCell>
 
             <TableCell>{order.user.email}</TableCell>
-            <TableCell>
-              {formatCurrency(order.pricePaidInCents / 100)}
-            </TableCell>
-            <TableCell>
-              {order.discountCode === null ? (
-                <Minus />
-              ) : (
-                order.discountCode.code
-              )}
-            </TableCell>
+            <TableCell>{formatCurrency(order.pricePaidInCents / 100)}</TableCell>
+            <TableCell>{order.discountCode === null ? <Minus /> : order.discountCode.code}</TableCell>
 
             <TableCell className="text-center">
               <DropdownMenu>

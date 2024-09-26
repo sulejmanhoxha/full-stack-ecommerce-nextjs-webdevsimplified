@@ -1,10 +1,7 @@
 import { PageHeader } from "@/app/admin/_components/PageHeader";
-import {
-  ActiveToggleDropdown,
-  DeleteDropdownItem,
-} from "@/app/admin/products/_components/ProductActions";
+import { ActiveToggleDropdown, DeleteDropdownItem } from "@/app/admin/products/_components/ProductActions";
 import { CheckCircle2, MoreVertical, XCircle } from "lucide-react";
-import { Link } from 'next-view-transitions'
+import { Link } from "next-view-transitions";
 
 import { formatCurrency, formatNumber } from "@/lib/formatters";
 import { prisma } from "@/lib/prismaClient";
@@ -16,14 +13,7 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import {
-  Table,
-  TableBody,
-  TableCell,
-  TableHead,
-  TableHeader,
-  TableRow,
-} from "@/components/ui/table";
+import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 
 export default function AdminProductsPage() {
   return (
@@ -110,20 +100,12 @@ async function ProductsTable() {
                     </a>
                   </DropdownMenuItem>
                   <DropdownMenuItem asChild>
-                    <Link href={`/admin/products/${product.id}/edit`}>
-                      Edit
-                    </Link>
+                    <Link href={`/admin/products/${product.id}/edit`}>Edit</Link>
                   </DropdownMenuItem>
 
-                  <ActiveToggleDropdown
-                    id={product.id}
-                    isAvailableForPurchase={product.isAvailableForPurchase}
-                  />
+                  <ActiveToggleDropdown id={product.id} isAvailableForPurchase={product.isAvailableForPurchase} />
                   {/* kete dona mi ba disabled nase ky product ka orders, se nase ka orders ather sguxen mi fshi */}
-                  <DeleteDropdownItem
-                    id={product.id}
-                    disabled={product._count.order > 0}
-                  />
+                  <DeleteDropdownItem id={product.id} disabled={product._count.order > 0} />
                 </DropdownMenuContent>
               </DropdownMenu>
             </TableCell>

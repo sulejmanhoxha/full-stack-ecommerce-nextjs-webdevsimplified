@@ -7,23 +7,28 @@ This is a [Next.js](https://nextjs.org/) project bootstrapped with [`create-next
 ## Getting Started
 
 First install the dependencies:
+
 ```bash
 npm install
 ```
 
 Then create a .env. Since in this project i am using SQLite i wrote this in it:
+
 ```env
 DATABASE_URL="file:./db/dev.db"
 ```
+
 If you want to use any other database, learn more about how to write the DATABASE_URL from [Prisma's documentation.](https://pris.ly/d/prisma-schema#accessing-environment-variables-from-the-schema)
 
 After that run :
+
 ```sh
 npm run migrate
 npm run generate
 ```
 
 If you want to view the database using a GUI, run this command and open [http://localhost:5555](http://localhost:5555) with your browser:
+
 ```sh
 npm run studio
 ```

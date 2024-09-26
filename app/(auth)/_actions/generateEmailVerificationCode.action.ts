@@ -8,10 +8,7 @@ import { prisma } from "@/lib/prismaClient";
 
 const resend = new Resend(process.env.RESEND_API_KEY);
 
-export async function generateEmailVerificationCode(
-  userId: string,
-  userEmail: string,
-): Promise<string> {
+export async function generateEmailVerificationCode(userId: string, userEmail: string): Promise<string> {
   await prisma.emailVerificationCode.deleteMany({
     where: {
       userId: userId,

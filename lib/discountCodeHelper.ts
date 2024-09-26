@@ -10,10 +10,7 @@ export function usableDiscountCodeWhere(productId: string) {
         OR: [{ allProducts: true }, { products: { some: { id: productId } } }],
       },
       {
-        OR: [
-          { limit: null },
-          { limit: { gt: prisma.discountCode.fields.uses } },
-        ],
+        OR: [{ limit: null }, { limit: { gt: prisma.discountCode.fields.uses } }],
       },
       { OR: [{ expiresAt: null }, { expiresAt: { gt: new Date() } }] },
     ],
@@ -26,20 +23,10 @@ export function getDiscountedAmount(
 ) {
   switch (discountCode.discountType) {
     case "PERCENTAGE":
-      return Math.max(
-        1,
-        Math.ceil(
-          priceInCents - (priceInCents * discountCode.discountAmount) / 100,
-        ),
-      );
+      return Math.max(1, Math.ceil(priceInCents - (priceInCents * discountCode.discountAmount) / 100));
     case "FIXED":
-      return Math.max(
-        1,
-        Math.ceil(priceInCents - discountCode.discountAmount * 100),
-      );
+      return Math.max(1, Math.ceil(priceInCents - discountCode.discountAmount * 100));
     default:
-      throw new Error(
-        `Invalid discount type ${discountCode.discountType satisfies never}`,
-      );
+      throw new Error(`Invalid discount type ${discountCode.discountType satisfies never}`);
   }
 }

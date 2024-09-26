@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
+import { ViewTransitions } from "next-view-transitions";
 import { Inter as FontSans } from "next/font/google";
-import { ViewTransitions } from 'next-view-transitions'
 
 import { cn } from "@/lib/utils";
 
@@ -25,17 +25,12 @@ export default function RootLayout({
 }>) {
   return (
     <ViewTransitions>
-    <html lang="en">
-      <body
-        className={cn(
-          "min-h-screen bg-background font-sans antialiased",
-          fontSans.variable,
-        )}
-      >
-        {children}
-        <Toaster />
-      </body>
-    </html>
+      <html lang="en">
+        <body className={cn("min-h-screen bg-background font-sans antialiased", fontSans.variable)}>
+          {children}
+          <Toaster />
+        </body>
+      </html>
     </ViewTransitions>
   );
 }

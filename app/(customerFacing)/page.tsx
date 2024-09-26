@@ -13,10 +13,7 @@ import { ProductCard, ProductCardSkeleton } from "@/components/ProductCard";
 export default function Homepage() {
   return (
     <main className="space-y-12">
-      <ProductGridSection
-        title="Most popular"
-        productFetcher={getMostPopularProducts}
-      />
+      <ProductGridSection title="Most popular" productFetcher={getMostPopularProducts} />
       <ProductGridSection title="Newest" productFetcher={getNewestProducts} />
     </main>
   );
@@ -88,12 +85,6 @@ function ProductGridSection({ productFetcher, title }: ProductGridProps) {
   );
 }
 
-async function ProductSuspense({
-  productFetcher,
-}: {
-  productFetcher: () => Promise<Product[]>;
-}) {
-  return (await productFetcher()).map((product) => (
-    <ProductCard key={product.id} {...product} />
-  ));
+async function ProductSuspense({ productFetcher }: { productFetcher: () => Promise<Product[]> }) {
+  return (await productFetcher()).map((product) => <ProductCard key={product.id} {...product} />);
 }

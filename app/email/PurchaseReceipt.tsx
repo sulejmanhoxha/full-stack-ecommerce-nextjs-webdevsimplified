@@ -1,13 +1,5 @@
 import { OrderInformation } from "@/app/email/_components/OrderInformation";
-import {
-  Body,
-  Container,
-  Head,
-  Heading,
-  Html,
-  Preview,
-  Tailwind,
-} from "@react-email/components";
+import { Body, Container, Head, Heading, Html, Preview, Tailwind } from "@react-email/components";
 
 type PurchaseReceiptEmailProps = {
   product: {
@@ -23,8 +15,7 @@ PurchaseReceiptEmail.PreviewProps = {
   product: {
     name: "Product name",
     description: "Some description",
-    imagePath:
-      "/products/5aba7442-e4a5-4d2e-bfa7-5bd358cdad64-02 - What Is Next.js.jpg",
+    imagePath: "/products/5aba7442-e4a5-4d2e-bfa7-5bd358cdad64-02 - What Is Next.js.jpg",
   },
   order: {
     id: crypto.randomUUID(),
@@ -34,11 +25,7 @@ PurchaseReceiptEmail.PreviewProps = {
   downloadVerificationId: crypto.randomUUID(),
 } satisfies PurchaseReceiptEmailProps;
 
-export default function PurchaseReceiptEmail({
-  product,
-  order,
-  downloadVerificationId,
-}: PurchaseReceiptEmailProps) {
+export default function PurchaseReceiptEmail({ product, order, downloadVerificationId }: PurchaseReceiptEmailProps) {
   return (
     <Html>
       <Preview>Download {product.name} and view receipt</Preview>
@@ -47,11 +34,7 @@ export default function PurchaseReceiptEmail({
         <Body className="bg-white font-sans">
           <Container className="max-w-xl">
             <Heading>Purchase Receipt</Heading>
-            <OrderInformation
-              order={order}
-              product={product}
-              downloadVerificationId={downloadVerificationId}
-            />
+            <OrderInformation order={order} product={product} downloadVerificationId={downloadVerificationId} />
           </Container>
         </Body>
       </Tailwind>

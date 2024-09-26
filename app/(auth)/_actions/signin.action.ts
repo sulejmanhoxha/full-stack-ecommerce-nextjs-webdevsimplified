@@ -35,10 +35,7 @@ export const signIn = async (values: z.infer<typeof SignInSchema>) => {
     };
   }
 
-  const isValidPassword = await argon2.verify(
-    existingUser.password,
-    values.password,
-  );
+  const isValidPassword = await argon2.verify(existingUser.password, values.password);
 
   if (!isValidPassword) {
     return {
@@ -50,11 +47,7 @@ export const signIn = async (values: z.infer<typeof SignInSchema>) => {
 
   const sessionCookie = lucia.createSessionCookie(session.id);
 
-  cookies().set(
-    sessionCookie.name,
-    sessionCookie.value,
-    sessionCookie.attributes,
-  );
+  cookies().set(sessionCookie.name, sessionCookie.value, sessionCookie.attributes);
 
   return {
     success: "Logged in successfully",

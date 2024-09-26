@@ -1,21 +1,12 @@
 "use client";
 
-import {
-  deleteDiscountCode,
-  toggleDiscountCodeActive,
-} from "@/app/admin/_actions/discount";
+import { deleteDiscountCode, toggleDiscountCodeActive } from "@/app/admin/_actions/discount";
 import { useRouter } from "next/navigation";
 import { useTransition } from "react";
 
 import { DropdownMenuItem } from "@/components/ui/dropdown-menu";
 
-export function ActiveToggleDropdownItem({
-  id,
-  isActive,
-}: {
-  id: string;
-  isActive: boolean;
-}) {
+export function ActiveToggleDropdownItem({ id, isActive }: { id: string; isActive: boolean }) {
   const [isPending, startTransition] = useTransition();
   const router = useRouter();
   return (
@@ -33,13 +24,7 @@ export function ActiveToggleDropdownItem({
   );
 }
 
-export function DeleteDropdownItem({
-  id,
-  disabled,
-}: {
-  id: string;
-  disabled: boolean;
-}) {
+export function DeleteDropdownItem({ id, disabled }: { id: string; disabled: boolean }) {
   const [isPending, startTransition] = useTransition();
   const router = useRouter();
   return (

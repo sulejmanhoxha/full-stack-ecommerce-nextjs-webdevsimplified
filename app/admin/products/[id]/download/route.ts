@@ -4,10 +4,7 @@ import { NextRequest, NextResponse } from "next/server";
 
 import { prisma } from "@/lib/prismaClient";
 
-export async function GET(
-  req: NextRequest,
-  { params: { id } }: { params: { id: string } },
-) {
+export async function GET(req: NextRequest, { params: { id } }: { params: { id: string } }) {
   const product = await prisma.product.findUnique({
     where: { id },
     select: { filePath: true, name: true },

@@ -2,13 +2,7 @@
 
 import { createPaymentIntent, userOrderExists } from "@/app/actions/orders";
 import { DiscountCodeType, Product } from "@prisma/client";
-import {
-  Elements,
-  LinkAuthenticationElement,
-  PaymentElement,
-  useElements,
-  useStripe,
-} from "@stripe/react-stripe-js";
+import { Elements, LinkAuthenticationElement, PaymentElement, useElements, useStripe } from "@stripe/react-stripe-js";
 import { loadStripe } from "@stripe/stripe-js";
 import { User } from "lucia";
 import Image from "next/image";
@@ -19,14 +13,7 @@ import { getDiscountedAmount } from "@/lib/discountCodeHelper";
 import { formatCurrency, formatDiscountCode } from "@/lib/formatters";
 
 import { Button } from "@/components/ui/button";
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardFooter,
-  CardHeader,
-  CardTitle,
-} from "@/components/ui/card";
+import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 
@@ -41,27 +28,12 @@ type CheckoutFormProps = {
   };
 };
 
-const stripePromise = loadStripe(
-  process.env.NEXT_PUBLIC_STRIPE_PUBLIC_KEY as string,
-);
+const stripePromise = loadStripe(process.env.NEXT_PUBLIC_STRIPE_PUBLIC_KEY as string);
 
-export function CheckoutForm({
-  user,
-  product,
-  amount,
-  discountCode,
-}: CheckoutFormProps) {
+export function CheckoutForm({ user, product, amount, discountCode }: CheckoutFormProps) {
   return (
-    <Elements
-      options={{ amount, mode: "payment", currency: "USD" }}
-      stripe={stripePromise}
-    >
-      <PaymentForm
-        user={user}
-        priceInCents={amount}
-        productId={product.id}
-        discountCode={discountCode}
-      />
+    <Elements options={{ amount, mode: "payment", currency: "USD" }} stripe={stripePromise}>
+      <PaymentForm user={user} priceInCents={amount} productId={product.id} discountCode={discountCode} />
     </Elements>
   );
 }
@@ -109,11 +81,7 @@ function PaymentForm({
       return;
     }
 
-    const paymentIntent = await createPaymentIntent(
-      user.email,
-      productId,
-      discountCode?.id,
-    );
+    const paymentIntent = await createPaymentIntent(user.email, productId, discountCode?.id);
 
     if (paymentIntent.error != null) {
       setErrorMessage(paymentIntent.error);
@@ -146,9 +114,7 @@ function PaymentForm({
           <CardDescription className="text-destructive">
             {errorMessage && <div>{errorMessage}</div>}
 
-            {coupon != null && discountCode == null && (
-              <div>Invalid discount code</div>
-            )}
+            {coupon != null && discountCode == null && <div>Invalid discount code</div>}
           </CardDescription>
         </CardHeader>
 
@@ -184,9 +150,7 @@ function PaymentForm({
               </Button>
 
               {discountCode ? (
-                <div className="text-muted-foreground">
-                  {formatDiscountCode(discountCode)} discount
-                </div>
+                <div className="text-muted-foreground">{formatDiscountCode(discountCode)} discount</div>
               ) : (
                 ""
               )}
@@ -194,14 +158,8 @@ function PaymentForm({
           </div>
         </CardContent>
         <CardFooter>
-          <Button
-            className="w-full"
-            size="lg"
-            disabled={stripe == null || elements == null || isLoading}
-          >
-            {isLoading
-              ? "Purchasing..."
-              : `Purchase - ${formatCurrency(priceInCents / 100)}`}
+          <Button className="w-full" size="lg" disabled={stripe == null || elements == null || isLoading}>
+            {isLoading ? "Purchasing..." : `Purchase - ${formatCurrency(priceInCents / 100)}`}
           </Button>
         </CardFooter>
       </Card>

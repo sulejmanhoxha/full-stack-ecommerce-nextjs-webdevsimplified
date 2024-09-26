@@ -9,9 +9,7 @@ import { NewProductSchema, UpdateProductSchema } from "@/zod/schemas";
 import { prisma } from "@/lib/prismaClient";
 
 export async function addProduct(prevState: unknown, values: FormData) {
-  const result = NewProductSchema.safeParse(
-    Object.fromEntries(values.entries()),
-  );
+  const result = NewProductSchema.safeParse(Object.fromEntries(values.entries()));
 
   if (result.success === false) {
     return result.error.formErrors.fieldErrors;
@@ -25,10 +23,7 @@ export async function addProduct(prevState: unknown, values: FormData) {
 
   fs.mkdir("public/products", { recursive: true });
   const imagePath = `/products/${crypto.randomUUID()}-${data.image.name}`;
-  await fs.writeFile(
-    `public${imagePath}`,
-    Buffer.from(await data.image.arrayBuffer()),
-  );
+  await fs.writeFile(`public${imagePath}`, Buffer.from(await data.image.arrayBuffer()));
 
   await prisma.product.create({
     data: {
@@ -45,14 +40,8 @@ export async function addProduct(prevState: unknown, values: FormData) {
   redirect("/admin/products");
 }
 
-export async function updateProduct(
-  id: string,
-  prevState: unknown,
-  values: FormData,
-) {
-  const result = UpdateProductSchema.safeParse(
-    Object.fromEntries(values.entries()),
-  );
+export async function updateProduct(id: string, prevState: unknown, values: FormData) {
+  const result = UpdateProductSchema.safeParse(Object.fromEntries(values.entries()));
 
   if (result.success === false) {
     return result.error.formErrors.fieldErrors;
@@ -76,10 +65,7 @@ export async function updateProduct(
   if (data.image != null && data.image.size > 0) {
     await fs.unlink(`public${product.imagePath}`);
     imagePath = `/products/${crypto.randomUUID()}-${data.image.name}`;
-    await fs.writeFile(
-      `public${imagePath}`,
-      Buffer.from(await data.image.arrayBuffer()),
-    );
+    await fs.writeFile(`public${imagePath}`, Buffer.from(await data.image.arrayBuffer()));
   }
 
   await prisma.product.update({
@@ -98,10 +84,7 @@ export async function updateProduct(
   redirect("/admin/products");
 }
 
-export async function toggleProductAvailability(
-  id: string,
-  isAvailableForPurchase: boolean,
-) {
+export async function toggleProductAvailability(id: string, isAvailableForPurchase: boolean) {
   await prisma.product.update({
     where: { id },
     data: {

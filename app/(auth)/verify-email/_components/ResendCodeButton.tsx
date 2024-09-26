@@ -4,13 +4,7 @@ import { useEffect, useState } from "react";
 import { Button } from "@/components/ui/button";
 import { toast } from "@/components/ui/use-toast";
 
-export function ResendCodeButton({
-  userId,
-  userEmail,
-}: {
-  userId: string;
-  userEmail: string;
-}) {
+export function ResendCodeButton({ userId, userEmail }: { userId: string; userEmail: string }) {
   const [disabled, setDisabled] = useState(false);
   const [remainingTime, setRemainingTime] = useState(0);
 
@@ -53,13 +47,7 @@ export function ResendCodeButton({
   }, [remainingTime]);
 
   return (
-    <Button
-      type="button"
-      onClick={resendCode}
-      variant={"secondary"}
-      className="mt-4 w-full"
-      disabled={disabled}
-    >
+    <Button type="button" onClick={resendCode} variant={"secondary"} className="mt-4 w-full" disabled={disabled}>
       {remainingTime > 0
         ? `Resend code (${Math.floor(remainingTime / 60)}:${remainingTime % 60 < 10 ? "0" : ""}${remainingTime % 60})`
         : "Resend code"}

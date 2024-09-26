@@ -1,12 +1,7 @@
 import { formatCurrency, formatNumber } from "@/lib/formatters";
 import { prisma } from "@/lib/prismaClient";
 
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardHeader,
-} from "@/components/ui/card";
+import { Card, CardContent, CardDescription, CardHeader } from "@/components/ui/card";
 
 async function getSalesData() {
   const data = await prisma.order.aggregate({
@@ -30,10 +25,7 @@ async function getUsersData() {
 
   return {
     userCount,
-    averageValuePerUser:
-      userCount === 0
-        ? 0
-        : (orderData._sum.pricePaidInCents || 0) / userCount / 100, // Convert cents to dollars
+    averageValuePerUser: userCount === 0 ? 0 : (orderData._sum.pricePaidInCents || 0) / userCount / 100, // Convert cents to dollars
   };
 }
 
@@ -50,11 +42,7 @@ async function getProductData() {
 }
 
 export default async function AdminDashboard() {
-  const [salesData, usersData, productData] = await Promise.all([
-    getSalesData(),
-    getUsersData(),
-    getProductData(),
-  ]);
+  const [salesData, usersData, productData] = await Promise.all([getSalesData(), getUsersData(), getProductData()]);
   return (
     <div className="grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-3">
       <DashboardCard

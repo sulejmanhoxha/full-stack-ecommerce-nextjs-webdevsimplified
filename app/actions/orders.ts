@@ -2,10 +2,7 @@
 
 import Stripe from "stripe";
 
-import {
-  getDiscountedAmount,
-  usableDiscountCodeWhere,
-} from "@/lib/discountCodeHelper";
+import { getDiscountedAmount, usableDiscountCodeWhere } from "@/lib/discountCodeHelper";
 import { validateRequest } from "@/lib/luciaAuth";
 import { prisma } from "@/lib/prismaClient";
 
@@ -25,11 +22,7 @@ export async function userOrderExists(email: string, productId: string) {
 
 const stripe = new Stripe(process.env.STRIPE_SECRET_KEY as string);
 
-export async function createPaymentIntent(
-  email: string,
-  productId: string,
-  discountCodeId?: string,
-) {
+export async function createPaymentIntent(email: string, productId: string, discountCodeId?: string) {
   const product = await prisma.product.findUnique({
     where: {
       id: productId,
@@ -63,15 +56,11 @@ export async function createPaymentIntent(
 
   if (existingOrder != null) {
     return {
-      error:
-        "You have already purchased this product. Try downloading it from the My Orders page",
+      error: "You have already purchased this product. Try downloading it from the My Orders page",
     };
   }
 
-  const amount =
-    discountCode == null
-      ? product.priceInCents
-      : getDiscountedAmount(discountCode, product.priceInCents);
+  const amount = discountCode == null ? product.priceInCents : getDiscountedAmount(discountCode, product.priceInCents);
 
   const paymentIntent = await stripe.paymentIntents.create({
     amount,

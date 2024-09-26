@@ -31,9 +31,7 @@ export function formatDiscountCode({
     case "FIXED":
       return formatCurrency(discountAmount);
     default:
-      throw new Error(
-        `Invalid discount code type ${discountType satisfies never}`,
-      );
+      throw new Error(`Invalid discount code type ${discountType satisfies never}`);
   }
 }
 

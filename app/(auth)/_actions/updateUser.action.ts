@@ -49,10 +49,7 @@ export async function updateUser(values: z.infer<typeof UserUpdateSchema>) {
 
     const updatedUser: UpdatedUser = {};
     if (values.oldPassword) {
-      const isValidPassword = await argon2.verify(
-        userExists?.password!,
-        values.oldPassword,
-      );
+      const isValidPassword = await argon2.verify(userExists?.password!, values.oldPassword);
 
       if (!isValidPassword) {
         return {
@@ -91,11 +88,7 @@ export async function updateUser(values: z.infer<typeof UserUpdateSchema>) {
 
       const sessionCookie = lucia.createSessionCookie(session.id);
 
-      cookies().set(
-        sessionCookie.name,
-        sessionCookie.value,
-        sessionCookie.attributes,
-      );
+      cookies().set(sessionCookie.name, sessionCookie.value, sessionCookie.attributes);
     }
 
     return {

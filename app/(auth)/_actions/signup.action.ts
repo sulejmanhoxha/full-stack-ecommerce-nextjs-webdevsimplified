@@ -45,11 +45,7 @@ export const signUp = async (values: z.infer<typeof SignUpSchema>) => {
 
     const sessionCookie = lucia.createSessionCookie(session.id);
 
-    cookies().set(
-      sessionCookie.name,
-      sessionCookie.value,
-      sessionCookie.attributes,
-    );
+    cookies().set(sessionCookie.name, sessionCookie.value, sessionCookie.attributes);
 
     return {
       success: true,

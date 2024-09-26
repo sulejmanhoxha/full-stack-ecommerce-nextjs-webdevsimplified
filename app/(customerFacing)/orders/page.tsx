@@ -58,15 +58,11 @@ export default async function OrdersPage() {
             {userOrders.map((order) => (
               <TableRow key={order.id}>
                 <TableCell>{order.product.name}</TableCell>
-                <TableCell>
-                  {formatCurrency(order.pricePaidInCents / 100)}
-                </TableCell>
+                <TableCell>{formatCurrency(order.pricePaidInCents / 100)}</TableCell>
                 <TableCell>{formatDate(order.createdAt)}</TableCell>
                 <TableCell>
                   <Button asChild>
-                    <Link href={`/orders/${order.product.id}/download`}>
-                      Download
-                    </Link>
+                    <Link href={`/orders/${order.product.id}/download`}>Download</Link>
                   </Button>
                 </TableCell>
               </TableRow>

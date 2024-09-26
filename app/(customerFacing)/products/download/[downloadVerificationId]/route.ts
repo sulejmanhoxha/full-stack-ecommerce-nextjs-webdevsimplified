@@ -5,9 +5,7 @@ import { prisma } from "@/lib/prismaClient";
 
 export async function GET(
   req: NextRequest,
-  {
-    params: { downloadVerificationId },
-  }: { params: { downloadVerificationId: string } },
+  { params: { downloadVerificationId } }: { params: { downloadVerificationId: string } },
 ) {
   const data = await prisma.downloadVerification.findUnique({
     where: { id: downloadVerificationId, expiresAt: { gt: new Date() } },
@@ -15,9 +13,7 @@ export async function GET(
   });
 
   if (data == null) {
-    return NextResponse.redirect(
-      new URL("/products/download/expired", req.url),
-    );
+    return NextResponse.redirect(new URL("/products/download/expired", req.url));
   }
 
   const { size } = await fs.stat(data.product.filePath);

@@ -3,13 +3,7 @@ import { redirect } from "next/navigation";
 
 import { validateRequest } from "@/lib/luciaAuth";
 
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardHeader,
-  CardTitle,
-} from "@/components/ui/card";
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 
 export default async function ProfilePage() {
   const { user } = await validateRequest();
@@ -24,8 +18,7 @@ export default async function ProfilePage() {
         <CardHeader>
           <CardTitle className="text-2xl">Your profile</CardTitle>
           <CardDescription>
-            Feel free to update your account information below. Only fill in the
-            fields you wish to modify.
+            Feel free to update your account information below. Only fill in the fields you wish to modify.
           </CardDescription>
         </CardHeader>
         <CardContent>

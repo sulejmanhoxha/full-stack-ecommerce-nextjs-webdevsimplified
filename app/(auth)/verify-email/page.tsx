@@ -3,13 +3,7 @@ import { redirect } from "next/navigation";
 
 import { validateRequest } from "@/lib/luciaAuth";
 
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardHeader,
-  CardTitle,
-} from "@/components/ui/card";
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 
 export default async function VerifyEmailPage() {
   const { user } = await validateRequest();
@@ -28,10 +22,8 @@ export default async function VerifyEmailPage() {
         <CardHeader>
           <CardTitle className="text-2xl">Verify Email</CardTitle>
           <CardDescription>
-            A verification code has been sent to{" "}
-            <span className="font-semibold text-foreground">{user.email}</span>.
-            Please enter the verification code below. Check the spam folder if
-            you can&apos;t find the email.
+            A verification code has been sent to <span className="font-semibold text-foreground">{user.email}</span>.
+            Please enter the verification code below. Check the spam folder if you can&apos;t find the email.
           </CardDescription>
         </CardHeader>
         <CardContent>

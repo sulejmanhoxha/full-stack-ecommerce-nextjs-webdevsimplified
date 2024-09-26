@@ -13,24 +13,13 @@ const addSchema = z
     discountType: z.nativeEnum(DiscountCodeType),
     allProducts: z.coerce.boolean(),
     productIds: z.array(z.string()).optional(),
-    expiresAt: z.preprocess(
-      (value) => (value === "" ? undefined : value),
-      z.coerce.date().min(new Date()).optional(),
-    ),
-    limit: z.preprocess(
-      (value) => (value === "" ? undefined : value),
-      z.coerce.number().int().min(1).optional(),
-    ),
+    expiresAt: z.preprocess((value) => (value === "" ? undefined : value), z.coerce.date().min(new Date()).optional()),
+    limit: z.preprocess((value) => (value === "" ? undefined : value), z.coerce.number().int().min(1).optional()),
   })
-  .refine(
-    (data) =>
-      data.discountAmount <= 100 ||
-      data.discountType !== DiscountCodeType.PERCENTAGE,
-    {
-      message: "Percentage discount must be less than or equal to 100",
-      path: ["discountAmount"],
-    },
-  )
+  .refine((data) => data.discountAmount <= 100 || data.discountType !== DiscountCodeType.PERCENTAGE, {
+    message: "Percentage discount must be less than or equal to 100",
+    path: ["discountAmount"],
+  })
   .refine((data) => !data.allProducts || data.productIds == null, {
     message: "Cannot select products when all products is selected",
     path: ["productIds"],

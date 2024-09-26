@@ -1,9 +1,7 @@
 import { z } from "zod";
 
 const fileSchema = z.instanceof(File, { message: "Required" });
-const imageSchema = fileSchema.refine(
-  (file) => file.size === 0 || file.type.startsWith("image/"),
-);
+const imageSchema = fileSchema.refine((file) => file.size === 0 || file.type.startsWith("image/"));
 
 export const NewProductSchema = z.object({
   name: z.string().min(2).max(50).trim(),

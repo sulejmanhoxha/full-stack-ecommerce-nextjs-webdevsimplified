@@ -9,24 +9,11 @@ import { useForm } from "react-hook-form";
 import { z } from "zod";
 
 import { Button } from "@/components/ui/button";
-import {
-  Form,
-  FormControl,
-  FormField,
-  FormItem,
-  FormLabel,
-  FormMessage,
-} from "@/components/ui/form";
+import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { toast } from "@/components/ui/use-toast";
 
-export function VerifyEmailForm({
-  userId,
-  userEmail,
-}: {
-  userId: string;
-  userEmail: string;
-}) {
+export function VerifyEmailForm({ userId, userEmail }: { userId: string; userEmail: string }) {
   const router = useRouter();
   const form = useForm<z.infer<typeof VerifyEmailSchema>>({
     resolver: zodResolver(VerifyEmailSchema),

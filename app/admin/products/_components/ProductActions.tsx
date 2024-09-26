@@ -1,21 +1,12 @@
 "use client";
 
-import {
-  deleteProduct,
-  toggleProductAvailability,
-} from "@/app/admin/_actions/products";
+import { deleteProduct, toggleProductAvailability } from "@/app/admin/_actions/products";
 import { useRouter } from "next/navigation";
 import { useTransition } from "react";
 
 import { DropdownMenuItem } from "@/components/ui/dropdown-menu";
 
-export function ActiveToggleDropdown({
-  id,
-  isAvailableForPurchase,
-}: {
-  id: string;
-  isAvailableForPurchase: boolean;
-}) {
+export function ActiveToggleDropdown({ id, isAvailableForPurchase }: { id: string; isAvailableForPurchase: boolean }) {
   const [isPending, startTransition] = useTransition();
   const router = useRouter();
   return (
@@ -33,13 +24,7 @@ export function ActiveToggleDropdown({
   );
 }
 
-export function DeleteDropdownItem({
-  id,
-  disabled,
-}: {
-  id: string;
-  disabled: boolean;
-}) {
+export function DeleteDropdownItem({ id, disabled }: { id: string; disabled: boolean }) {
   const router = useRouter();
   const [isPending, startTransition] = useTransition();
   return (

@@ -3,13 +3,7 @@ import { redirect } from "next/navigation";
 
 import { validateRequest } from "@/lib/luciaAuth";
 
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardHeader,
-  CardTitle,
-} from "@/components/ui/card";
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 
 export default async function SignInPage() {
   const { user } = await validateRequest();
@@ -23,9 +17,7 @@ export default async function SignInPage() {
       <Card className="mx-auto max-w-sm">
         <CardHeader>
           <CardTitle className="text-2xl">Signin</CardTitle>
-          <CardDescription>
-            Enter your email and password below to login to your account.
-          </CardDescription>
+          <CardDescription>Enter your email and password below to login to your account.</CardDescription>
         </CardHeader>
         <CardContent>
           <SignInForm />

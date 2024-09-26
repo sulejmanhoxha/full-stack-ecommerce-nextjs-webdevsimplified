@@ -11,11 +11,7 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 
-export function DiscountCodeForm({
-  products,
-}: {
-  products: { name: string; id: string }[];
-}) {
+export function DiscountCodeForm({ products }: { products: { name: string; id: string }[] }) {
   const [error, action] = useFormState(addDiscountCode, {});
   const [allProducts, setAllProducts] = useState(true);
   const today = new Date();
@@ -31,16 +27,9 @@ export function DiscountCodeForm({
       <div className="flex items-baseline gap-8 space-y-2">
         <div className="space-y-2">
           <Label htmlFor="discountType">Discount Type</Label>
-          <RadioGroup
-            id="discountType"
-            name="discountType"
-            defaultValue={DiscountCodeType.PERCENTAGE}
-          >
+          <RadioGroup id="discountType" name="discountType" defaultValue={DiscountCodeType.PERCENTAGE}>
             <div className="flex items-center gap-2">
-              <RadioGroupItem
-                id="percentage"
-                value={DiscountCodeType.PERCENTAGE}
-              />
+              <RadioGroupItem id="percentage" value={DiscountCodeType.PERCENTAGE} />
               <Label htmlFor="percentage">Percentage</Label>
             </div>
             <div className="flex items-center gap-2">
@@ -48,29 +37,18 @@ export function DiscountCodeForm({
               <Label htmlFor="fixed">Fixed</Label>
             </div>
           </RadioGroup>
-          {error.discountType && (
-            <div className="text-destructive">{error.discountType}</div>
-          )}
+          {error.discountType && <div className="text-destructive">{error.discountType}</div>}
         </div>
         <div className="flex-grow space-y-2">
           <Label htmlFor="discountAmount">Discount Amount</Label>
-          <Input
-            type="number"
-            id="discountAmount"
-            name="discountAmount"
-            required
-          />
-          {error.discountAmount && (
-            <div className="text-destructive">{error.discountAmount}</div>
-          )}
+          <Input type="number" id="discountAmount" name="discountAmount" required />
+          {error.discountAmount && <div className="text-destructive">{error.discountAmount}</div>}
         </div>
       </div>
       <div className="space-y-2">
         <Label htmlFor="limit">Limit</Label>
         <Input type="number" id="limit" name="limit" />
-        <div className="text-muted-foreground">
-          Leave blank for infinite uses
-        </div>
+        <div className="text-muted-foreground">Leave blank for infinite uses</div>
         {error.limit && <div className="text-destructive">{error.limit}</div>}
       </div>
       <div className="space-y-2">
@@ -82,21 +60,13 @@ export function DiscountCodeForm({
           className="w-max"
           min={today.toJSON().split(":").slice(0, -1).join(":")}
         />
-        <div className="text-muted-foreground">
-          Leave blank for no expiration
-        </div>
-        {error.expiresAt && (
-          <div className="text-destructive">{error.expiresAt}</div>
-        )}
+        <div className="text-muted-foreground">Leave blank for no expiration</div>
+        {error.expiresAt && <div className="text-destructive">{error.expiresAt}</div>}
       </div>
       <div className="space-y-2">
         <Label>Allowed Products</Label>
-        {error.allProducts && (
-          <div className="text-destructive">{error.allProducts}</div>
-        )}
-        {error.productIds && (
-          <div className="text-destructive">{error.productIds}</div>
-        )}
+        {error.allProducts && <div className="text-destructive">{error.allProducts}</div>}
+        {error.productIds && <div className="text-destructive">{error.productIds}</div>}
         <div className="flex items-center gap-2">
           <Checkbox
             id="allProducts"
@@ -108,12 +78,7 @@ export function DiscountCodeForm({
         </div>
         {products.map((product) => (
           <div key={product.id} className="flex items-center gap-2">
-            <Checkbox
-              id={product.id}
-              name="productIds"
-              disabled={allProducts}
-              value={product.id}
-            />
+            <Checkbox id={product.id} name="productIds" disabled={allProducts} value={product.id} />
             <Label htmlFor={product.id}>{product.name}</Label>
           </div>
         ))}

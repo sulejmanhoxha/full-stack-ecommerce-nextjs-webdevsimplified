@@ -3,20 +3,13 @@
 import { signIn } from "@/app/(auth)/_actions/signin.action";
 import { SignInSchema } from "@/app/(auth)/_schemas/zod.schemas";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { Link } from 'next-view-transitions'
+import { Link } from "next-view-transitions";
 import { useRouter } from "next/navigation";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 
 import { Button } from "@/components/ui/button";
-import {
-  Form,
-  FormControl,
-  FormField,
-  FormItem,
-  FormLabel,
-  FormMessage,
-} from "@/components/ui/form";
+import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { toast } from "@/components/ui/use-toast";
@@ -71,11 +64,7 @@ export function SignInForm() {
             <FormItem>
               <Label>Password</Label>
               <FormControl>
-                <Input
-                  placeholder="&#9679;&#9679;&#9679;&#9679;&#9679;"
-                  type="password"
-                  {...field}
-                />
+                <Input placeholder="&#9679;&#9679;&#9679;&#9679;&#9679;" type="password" {...field} />
               </FormControl>
               <FormMessage />
             </FormItem>

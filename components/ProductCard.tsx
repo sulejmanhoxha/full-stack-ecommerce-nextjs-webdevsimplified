@@ -1,18 +1,11 @@
 import { Description } from "@radix-ui/react-toast";
+import { Link } from "next-view-transitions";
 import Image from "next/image";
-import { Link } from 'next-view-transitions'
 
 import { formatCurrency } from "@/lib/formatters";
 
 import { Button } from "@/components/ui/button";
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardFooter,
-  CardHeader,
-  CardTitle,
-} from "@/components/ui/card";
+import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
 
 type ProductCardProps = {
   id: string;
@@ -22,13 +15,7 @@ type ProductCardProps = {
   imagePath: string;
 };
 
-export function ProductCard({
-  id,
-  name,
-  priceInCents,
-  description,
-  imagePath,
-}: ProductCardProps) {
+export function ProductCard({ id, name, priceInCents, description, imagePath }: ProductCardProps) {
   return (
     <Card className="flex flex-col overflow-hidden">
       <div className="relative aspect-video h-auto w-full">

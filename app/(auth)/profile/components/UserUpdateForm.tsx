@@ -10,14 +10,7 @@ import { z } from "zod";
 
 import { Button } from "@/components/ui/button";
 import { Checkbox } from "@/components/ui/checkbox";
-import {
-  Form,
-  FormControl,
-  FormField,
-  FormItem,
-  FormLabel,
-  FormMessage,
-} from "@/components/ui/form";
+import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 
@@ -56,11 +49,7 @@ export function UserUpdateForm({ user }: { user: User }) {
               <FormItem>
                 <FormLabel>Email</FormLabel>
                 <FormControl>
-                  <Input
-                    placeholder="email@example.com"
-                    type="email"
-                    {...field}
-                  />
+                  <Input placeholder="email@example.com" type="email" {...field} />
                 </FormControl>
                 <FormMessage />
               </FormItem>
@@ -74,11 +63,7 @@ export function UserUpdateForm({ user }: { user: User }) {
               <FormItem>
                 <FormLabel>Old password</FormLabel>
                 <FormControl>
-                  <Input
-                    placeholder="&#9679;&#9679;&#9679;&#9679;&#9679;"
-                    type="password"
-                    {...field}
-                  />
+                  <Input placeholder="&#9679;&#9679;&#9679;&#9679;&#9679;" type="password" {...field} />
                 </FormControl>
                 <FormMessage />
               </FormItem>
@@ -92,11 +77,7 @@ export function UserUpdateForm({ user }: { user: User }) {
               <FormItem>
                 <FormLabel>New Password</FormLabel>
                 <FormControl>
-                  <Input
-                    placeholder="&#9679;&#9679;&#9679;&#9679;&#9679;"
-                    type="password"
-                    {...field}
-                  />
+                  <Input placeholder="&#9679;&#9679;&#9679;&#9679;&#9679;" type="password" {...field} />
                 </FormControl>
                 <FormMessage />
               </FormItem>
@@ -110,11 +91,7 @@ export function UserUpdateForm({ user }: { user: User }) {
               <FormItem>
                 <FormLabel>Confirm Password</FormLabel>
                 <FormControl>
-                  <Input
-                    placeholder="&#9679;&#9679;&#9679;&#9679;&#9679;"
-                    type="password"
-                    {...field}
-                  />
+                  <Input placeholder="&#9679;&#9679;&#9679;&#9679;&#9679;" type="password" {...field} />
                 </FormControl>
                 <FormMessage />
               </FormItem>
