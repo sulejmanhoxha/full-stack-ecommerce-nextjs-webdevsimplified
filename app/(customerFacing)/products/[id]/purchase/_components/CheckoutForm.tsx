@@ -48,11 +48,13 @@ const stripePromise = loadStripe(
 export function CheckoutForm({
   user,
   product,
-  clientSecret,
   discountCode,
 }: CheckoutFormProps) {
   return (
-    <Elements options={{ clientSecret }} stripe={stripePromise}>
+    <Elements
+      options={{ amount, mode: "payment", currency: "USD" }}
+      stripe={stripePromise}
+    >
       <PaymentForm
         user={user}
         priceInCents={product.priceInCents}
@@ -99,19 +101,27 @@ function PaymentForm({
 
     setIsLoading(true);
 
-    const orderExists = await userOrderExists(user.email, productId);
-
-    if (orderExists) {
-      setErrorMessage(
-        "You have already purchased this product. Try downloading it from the My Orders page",
-      );
-      setIsLoading(false);
-      return;
+    const formSubmit = await elements.submit()
+    if (formSubmit.error != null) {
+      setErrorMessage(formSubmit.error.message)
+      setIsLoading(false)
+      return
     }
+
+
+    const paymentIntent = await createPaymentIntent(email, productId, discountCode?.id)
+
+    if (paymentIntent.error != null) {
+      setErrorMessage(paymentIntent.error)
+      setIsLoading(false)
+      return
+    }
+   
     // check for existing order
     stripe
       .confirmPayment({
         elements,
+        clientSecret:paymentIntent.clientSecret,
         confirmParams: {
           return_url: `${process.env.NEXT_PUBLIC_SERVER_URL}/stripe/purchase-success`,
         },
