@@ -34,6 +34,12 @@ export default async function PurchasePage({
     return notFound();
   }
 
+  const { user } = await validateRequest();
+
+  if (!user) {
+    return redirect("/signin");
+  }
+
   const discountCode = coupon
     ? await getDiscountCode(coupon, product.id)
     : undefined;
@@ -43,21 +49,7 @@ export default async function PurchasePage({
       ? product.priceInCents
       : getDiscountedAmount(discountCode, product.priceInCents);
   const isDiscounted = amount !== product.priceInCents;
-  const { user } = await validateRequest();
 
-  if (!user) {
-    return redirect("/signin");
-  }
-
-  const paymentIntent = await stripe.paymentIntents.create({
-    amount: product.priceInCents,
-    currency: "USD",
-    metadata: { productId: product.id, userId: user.id },
-  });
-
-  if (paymentIntent.client_secret == null) {
-    throw Error("Stripe failed to create payment intent");
-  }
   return (
     <>
       <div className="mx-auto w-full max-w-5xl space-y-8">
@@ -81,7 +73,6 @@ export default async function PurchasePage({
                     : ""
                 }
               >
-                {" "}
                 {formatCurrency(product.priceInCents / 100)}
               </div>
               {isDiscounted ? <div>{formatCurrency(amount / 100)}</div> : ""}
@@ -94,9 +85,9 @@ export default async function PurchasePage({
         </div>
 
         <CheckoutForm
+          amount={amount}
           user={user}
           product={product}
-          clientSecret={paymentIntent.client_secret}
           discountCode={discountCode || undefined}
         />
       </div>
@@ -107,6 +98,6 @@ export default async function PurchasePage({
 function getDiscountCode(coupon: string, productId: string) {
   return prisma.discountCode.findUnique({
     select: { id: true, discountAmount: true, discountType: true },
-    where: { ...usableDiscountCodeWhere, code: coupon },
+    where: { ...usableDiscountCodeWhere(productId), code: coupon },
   });
 }
