@@ -34,7 +34,9 @@ async function UsersTable() {
         },
       },
     },
-
+    where: {
+      role: "user",
+    },
     orderBy: {
       orders: {
         _count: "desc",

@@ -40,20 +40,15 @@ export async function addDiscountCode(prevState: unknown, formData: FormData) {
 
   const data = result.data;
 
-  prisma.discountCode.create({
+  await prisma.discountCode.create({
     data: {
       code: data.code,
       discountAmount: data.discountAmount,
       discountType: data.discountType,
       allProducts: data.allProducts,
+      products: data.productIds != null ? { connect: data.productIds.map((id) => ({ id })) } : undefined,
       expiresAt: data.expiresAt,
       limit: data.limit,
-      products:
-        data.productIds != null
-          ? {
-              connect: data.productIds.map((id) => ({ id })),
-            }
-          : undefined,
     },
   });
 
