@@ -32,7 +32,7 @@ const stripePromise = loadStripe(process.env.NEXT_PUBLIC_STRIPE_PUBLIC_KEY as st
 
 export function CheckoutForm({ user, product, amount, discountCode }: CheckoutFormProps) {
   return (
-    <Elements options={{ amount, mode: "payment", currency: "USD" }} stripe={stripePromise}>
+    <Elements options={{ amount, mode: "payment", currency: "usd" }} stripe={stripePromise}>
       <PaymentForm user={user} priceInCents={amount} productId={product.id} discountCode={discountCode} />
     </Elements>
   );

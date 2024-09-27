@@ -54,7 +54,9 @@ export async function createPaymentIntent(email: string, productId: string, disc
 
   const existingOrder = await userOrderExists(user.email, productId);
 
-  if (existingOrder != null) {
+  console.log("existingOrder", existingOrder);
+
+  if (existingOrder) {
     return {
       error: "You have already purchased this product. Try downloading it from the My Orders page",
     };

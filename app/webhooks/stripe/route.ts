@@ -20,15 +20,16 @@ export async function POST(req: NextRequest) {
   if (event.type === "charge.succeeded") {
     const charge = event.data.object;
     const productId = charge.metadata.productId;
+
+    const pricePaidInCents = charge.amount;
+    const discountCodeId = charge.metadata.discountCodeId;
+
     const userId = charge.metadata.userId;
     const user = await prisma.user.findUnique({
       where: {
         id: userId,
       },
     });
-
-    // const email = charge.billing_details.email;
-    const pricePaidInCents = charge.amount;
 
     const product = await prisma.product.findUnique({
       where: { id: productId },
@@ -38,34 +39,28 @@ export async function POST(req: NextRequest) {
       return new NextResponse("Bad Request", { status: 400 });
     }
 
-    // upsert will create a new user if one doesn't exist
-    // const userFields = {
-    //   email,
-    //   orders: { create: { productId, pricePaidInCents } },
-    // };
-    // const {
-    //   orders: [order],
-    // } = await prisma.user.upsert({
-    //   where: { email },
-    //   create: userFields,
-    //   update: userFields,
-    //   select: { orders: { orderBy: { createdAt: "desc" }, take: 1 } },
-    // });
-
     const order = await prisma.order.create({
       data: {
         userId: user.id,
         productId,
         pricePaidInCents,
+        discountCodeId,
       },
     });
 
     const downloadVerification = await prisma.downloadVerification.create({
       data: {
         productId,
-        expiresAt: new Date(Date.now() + 1000 * 60 * 60 * 24),
+        expiresAt: new Date(Date.now() + 1000 * 60 * 60 * 24), // 24 hours
       },
     });
+
+    if (discountCodeId != null) {
+      await prisma.discountCode.update({
+        where: { id: discountCodeId },
+        data: { uses: { increment: 1 } },
+      });
+    }
 
     await resend.emails.send({
       from: `Support <${process.env.SENDER_EMAIL}>`,

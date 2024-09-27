@@ -2,7 +2,7 @@ import { Link } from "next-view-transitions";
 import Image from "next/image";
 import { redirect } from "next/navigation";
 
-import { formatCurrency, formatDate } from "@/lib/formatters";
+import { formatCurrency, formatDateTime } from "@/lib/formatters";
 import { validateRequest } from "@/lib/luciaAuth";
 import { prisma } from "@/lib/prismaClient";
 
@@ -59,7 +59,7 @@ export default async function OrdersPage() {
               <TableRow key={order.id}>
                 <TableCell>{order.product.name}</TableCell>
                 <TableCell>{formatCurrency(order.pricePaidInCents / 100)}</TableCell>
-                <TableCell>{formatDate(order.createdAt)}</TableCell>
+                <TableCell>{formatDateTime(order.createdAt)}</TableCell>
                 <TableCell>
                   <Button asChild>
                     <Link href={`/orders/${order.product.id}/download`}>Download</Link>

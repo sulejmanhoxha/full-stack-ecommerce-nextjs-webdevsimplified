@@ -1,18 +1,11 @@
-import { SignInForm } from "@/app/(auth)/signin/_components/SignInForm";
 import { CheckoutForm } from "@/app/(customerFacing)/products/[id]/purchase/_components/CheckoutForm";
-import { Link } from "next-view-transitions";
 import Image from "next/image";
 import { notFound, redirect } from "next/navigation";
-import Stripe from "stripe";
 
 import { getDiscountedAmount, usableDiscountCodeWhere } from "@/lib/discountCodeHelper";
 import { formatCurrency } from "@/lib/formatters";
 import { validateRequest } from "@/lib/luciaAuth";
 import { prisma } from "@/lib/prismaClient";
-
-import { Button } from "@/components/ui/button";
-
-const stripe = new Stripe(process.env.STRIPE_SECRET_KEY as string);
 
 export default async function PurchasePage({
   params: { id },
