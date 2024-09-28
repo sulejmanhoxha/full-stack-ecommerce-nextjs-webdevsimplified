@@ -1,3 +1,7 @@
+import { BestProductsChart } from "@/app/admin/_components/BestProductsChart";
+import { CouponUsageChart } from "@/app/admin/_components/CouponUsageChart";
+import { SalesChart } from "@/app/admin/_components/SalesChart";
+
 import { formatCurrency, formatNumber } from "@/lib/formatters";
 import { prisma } from "@/lib/prismaClient";
 
@@ -41,28 +45,112 @@ async function getProductData() {
   };
 }
 
+export async function getChartSalesData() {
+  const salesOverTime = await prisma.order.findMany({
+    select: {
+      createdAt: true,
+      pricePaidInCents: true,
+    },
+    where: {
+      createdAt: {
+        gte: new Date(new Date().setFullYear(new Date().getFullYear() - 1)), // Last year
+      },
+    },
+    orderBy: {
+      createdAt: "asc",
+    },
+  });
+
+  return salesOverTime;
+}
+
+export async function bestSellingProducts() {
+  const result = await prisma.product.findMany({
+    select: {
+      name: true,
+      _count: {
+        select: { order: true },
+      },
+    },
+    orderBy: {
+      order: {
+        _count: "desc",
+      },
+    },
+    take: 5, // adjusted for top 5 products
+  });
+
+  const topSellingProducts = result.map((data) => {
+    return { name: data.name, orders: data._count.order };
+  });
+
+  return topSellingProducts;
+}
+
+export async function couponUSage() {
+  const result = await prisma.discountCode.findMany({
+    where: {
+      isActive: true,
+    },
+    select: {
+      code: true,
+      _count: {
+        select: { orders: true },
+      },
+    },
+    orderBy: {
+      orders: {
+        _count: "desc",
+      },
+    },
+    take: 5, // adjusted for top 5  coupons
+  });
+
+  const discountCodeUsage = result.map((data) => {
+    return { coupon: data.code, usage: data._count.orders };
+  });
+
+  return discountCodeUsage;
+}
+
 export default async function AdminDashboard() {
-  const [salesData, usersData, productData] = await Promise.all([getSalesData(), getUsersData(), getProductData()]);
+  const [salesData, usersData, productData, chartSalesData, topSellingProducts, discountCodeUsage] = await Promise.all([
+    getSalesData(),
+    getUsersData(),
+    getProductData(),
+    getChartSalesData(),
+    bestSellingProducts(),
+    couponUSage(),
+  ]);
+
   return (
-    <div className="grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-3">
-      <DashboardCard
-        title="Sales"
-        subtitle={`${formatNumber(salesData.numberOfSales)} Orders`}
-        body={formatCurrency(salesData.amount)}
-      />
+    <>
+      <div className="grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-3">
+        <DashboardCard
+          title="Sales"
+          subtitle={`${formatNumber(salesData.numberOfSales)} Orders`}
+          body={formatCurrency(salesData.amount)}
+        />
 
-      <DashboardCard
-        title="Customer"
-        subtitle={`${formatCurrency(usersData.averageValuePerUser)} Average Value`}
-        body={formatNumber(usersData.userCount)}
-      />
+        <DashboardCard
+          title="Customer"
+          subtitle={`${formatCurrency(usersData.averageValuePerUser)} Average Value`}
+          body={formatNumber(usersData.userCount)}
+        />
 
-      <DashboardCard
-        title="Active Products"
-        subtitle={`${formatNumber(productData.inactiveCount)} Inactive`}
-        body={formatNumber(productData.activeCount)}
-      />
-    </div>
+        <DashboardCard
+          title="Active Products"
+          subtitle={`${formatNumber(productData.inactiveCount)} Inactive`}
+          body={formatNumber(productData.activeCount)}
+        />
+      </div>
+
+      <div className="mt-10 grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-3">
+        <SalesChart data={chartSalesData} />
+        <BestProductsChart data={topSellingProducts} />
+        <CouponUsageChart data={discountCodeUsage} />
+      </div>
+    </>
   );
 }
 
