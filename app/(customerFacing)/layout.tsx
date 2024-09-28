@@ -34,7 +34,8 @@ export default async function Layout({
         {user && (
           <>
             <NavLink href="/profile">Profile</NavLink>
-            <form className="ml-4 self-center" action={() => signOut().then(() => undefined)}>
+            {/* @ts-ignore */}
+            <form className="ml-4 self-center" action={signOut}>
               <Button variant={"destructive"} type="submit">
                 Sign out
               </Button>
