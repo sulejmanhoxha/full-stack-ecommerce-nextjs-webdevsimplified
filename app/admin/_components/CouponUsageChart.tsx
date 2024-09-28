@@ -1,7 +1,6 @@
 "use client";
 
-import { couponUSage } from "@/app/admin/page";
-import { TrendingUp } from "lucide-react";
+import { TcouponUSage } from "@/app/admin/page";
 import { useMemo } from "react";
 import { LabelList, Pie, PieChart } from "recharts";
 
@@ -16,7 +15,7 @@ const COLORS = [
   "hsl(var(--chart-5))",
 ];
 
-export function CouponUsageChart({ data }: { data: Awaited<ReturnType<typeof couponUSage>> }) {
+export function CouponUsageChart({ data }: { data: TcouponUSage }) {
   const chartData = useMemo(() => {
     return data.map((data, index) => {
       return { coupon: data.coupon, usage: data.usage, fill: COLORS[index] };

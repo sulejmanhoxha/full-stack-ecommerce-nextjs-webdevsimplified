@@ -45,7 +45,7 @@ async function getProductData() {
   };
 }
 
-export async function getChartSalesData() {
+async function getChartSalesData() {
   const salesOverTime = await prisma.order.findMany({
     select: {
       createdAt: true,
@@ -64,7 +64,7 @@ export async function getChartSalesData() {
   return salesOverTime;
 }
 
-export async function bestSellingProducts() {
+async function bestSellingProducts() {
   const result = await prisma.product.findMany({
     select: {
       name: true,
@@ -87,7 +87,7 @@ export async function bestSellingProducts() {
   return topSellingProducts;
 }
 
-export async function couponUSage() {
+async function couponUSage() {
   const result = await prisma.discountCode.findMany({
     where: {
       isActive: true,
@@ -112,6 +112,10 @@ export async function couponUSage() {
 
   return discountCodeUsage;
 }
+
+export type TbestSellingProducts = Awaited<ReturnType<typeof bestSellingProducts>>;
+export type TcouponUSage = Awaited<ReturnType<typeof couponUSage>>;
+export type TsalesOverTime = Awaited<ReturnType<typeof getChartSalesData>>;
 
 export default async function AdminDashboard() {
   const [salesData, usersData, productData, chartSalesData, topSellingProducts, discountCodeUsage] = await Promise.all([

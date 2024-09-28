@@ -34,7 +34,7 @@ export default async function AdminLayout({
         <NavLink href="/admin/orders">Sales</NavLink>
         <NavLink href="/admin/discount-codes">Coupons</NavLink>
 
-        <form className="ml-4 self-center" action={signOut}>
+        <form className="ml-4 self-center" action={() => signOut().then(() => undefined)}>
           <Button variant={"destructive"} type="submit">
             Sign out
           </Button>

@@ -1,6 +1,6 @@
 "use client";
 
-import { bestSellingProducts } from "@/app/admin/page";
+import { TbestSellingProducts } from "@/app/admin/page";
 import { Bar, BarChart, CartesianGrid, XAxis } from "recharts";
 
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
@@ -17,7 +17,7 @@ const chartConfig = {
   },
 } satisfies ChartConfig;
 
-export function BestProductsChart({ data }: { data: Awaited<ReturnType<typeof bestSellingProducts>> }) {
+export function BestProductsChart({ data }: { data: TbestSellingProducts }) {
   return (
     <Card>
       <CardHeader>

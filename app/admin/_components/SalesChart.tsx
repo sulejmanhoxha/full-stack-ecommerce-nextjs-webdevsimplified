@@ -1,6 +1,6 @@
 "use client";
 
-import { getChartSalesData } from "@/app/admin/page";
+import { TsalesOverTime } from "@/app/admin/page";
 import { TrendingUp } from "lucide-react";
 import { CartesianGrid, Line, LineChart, XAxis } from "recharts";
 
@@ -14,7 +14,7 @@ const chartConfig = {
   },
 } satisfies ChartConfig;
 
-export function SalesChart({ data }: { data: Awaited<ReturnType<typeof getChartSalesData>> }) {
+export function SalesChart({ data }: { data: TsalesOverTime }) {
   const sales = data;
 
   const chartData = Array.from({ length: 12 }, (_, index) => {
